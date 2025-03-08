@@ -80,7 +80,7 @@ export default function SignInCard() {
       e.preventDefault();
       return;
     } else {
-      navigate("/adminHome");
+      navigate("/admin");
     }
   };
 
@@ -112,7 +112,7 @@ export default function SignInCard() {
   };
   const navigate = useNavigate();
   return (
-    <SignInContainer direction="column" justifyContent="space-between">
+    <SignInContainer direction="column" justifyContent="center">
       <Card variant="outlined">
         <Box sx={{ display: { xs: "flex", md: "none" } }}></Box>
         <Typography

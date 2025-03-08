@@ -128,8 +128,8 @@ export const BooksTable = ({ onUpdateBook, onRowDelete, books }) => {
 
   return (
     <div>
-      <TableContainer>
-        <Table sx={{ maxWidth: 1000 }} aria-label="custom pagination table">
+      <TableContainer component={Paper}>
+        <Table sx={{ maxWidth: 1200 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
               <StyledTableCell>Book id</StyledTableCell>
@@ -162,9 +162,7 @@ export const BooksTable = ({ onUpdateBook, onRowDelete, books }) => {
                 <StyledTableCell align="left">
                   {row.description}
                 </StyledTableCell>
-                <StyledTableCell align="left">
-                  {row.book_status}
-                </StyledTableCell>
+                <StyledTableCell align="left">{row.status}</StyledTableCell>
                 <StyledTableCell align="left">
                   <UpdateBook data={row} onUpdateBook={onUpdateBook} />
                 </StyledTableCell>
@@ -181,16 +179,16 @@ export const BooksTable = ({ onUpdateBook, onRowDelete, books }) => {
               </StyledTableRow>
             ))}
             {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <StyledTableCell colSpan={6} />
-              </TableRow>
+              <StyledTableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </StyledTableRow>
             )}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={3}
+                colSpan={6}
                 count={books.length}
                 rowsPerPage={rowsPerPage}
                 page={page}

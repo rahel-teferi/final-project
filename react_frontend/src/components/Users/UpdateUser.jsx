@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export const UpdateUser = ({ data, onUpdateUser }) => {
   const [open, setOpen] = useState(false);
@@ -10,7 +10,7 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
   const handleClose = () => setOpen(false);
   const [values, setValues] = useState({
     user_id: data.user_id,
-    user_name: data.user_name,
+    name: data.name,
     email: data.email,
     password: data.password,
     role: data.role,
@@ -25,7 +25,7 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
   const handleEdit = async (e) => {
     e.preventDefault();
     let updatedUser = {
-      user_name: values.user_name,
+      name: values.name,
       email: values.email,
       password: values.password,
       role: values.role,
@@ -62,8 +62,8 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
                   User name
                   <input
                     type="text"
-                    name="user_name"
-                    value={values.user_name}
+                    name="name"
+                    value={values.name}
                     onChange={handleChange}
                   />
                 </label>

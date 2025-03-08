@@ -10,7 +10,7 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
     author: "",
     genre: "",
     description: "",
-    book_status: "",
+    status: "",
   });
   const style = {
     position: "absolute",
@@ -39,7 +39,7 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
       author: formFields.author,
       genre: formFields.genre,
       description: formFields.description,
-      book_status: formFields.book_status,
+      status: formFields.status,
     };
     onSubmitBook(newBook);
     console.log("success");
@@ -59,7 +59,7 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
             Add a new book
           </div> */}
           <div id="modal-modal-description" sx={{ mt: 2 }}>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} action="/books">
               <p>
                 <label>
                   Book title
@@ -108,12 +108,12 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
                 <label>
                   Status
                   <select
-                    value={formFields.book_status}
-                    name="book_status"
+                    value={formFields.status}
+                    name="status"
                     onChange={handleChange}
                   >
                     <option value="Available">Available</option>
-                    <option value="Borrowed">Borrowed</option>
+                    <option value="Loaned">Loaned</option>
                   </select>
                 </label>
               </p>

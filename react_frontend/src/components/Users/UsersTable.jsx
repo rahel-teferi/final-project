@@ -22,6 +22,7 @@ import { useState, useEffect } from "react";
 import { UpdateUser } from "./UpdateUser";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import { AddUserForm } from "./AddUserForm";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -111,13 +112,18 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export const UsersTable = ({ users, onRowDelete, onUpdateUser }) => {
+export const UsersTable = ({
+  users,
+  onRowDelete,
+  onUpdateUser,
+  onSubmitUser,
+}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - books.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -130,6 +136,10 @@ export const UsersTable = ({ users, onRowDelete, onUpdateUser }) => {
 
   return (
     <div>
+      <div>
+        {" "}
+        <AddUserForm onSubmitUser={onSubmitUser} />
+      </div>
       <TableContainer>
         <Table sx={{ maxWidth: 800 }} aria-label="custom pagination table">
           <TableHead>
@@ -154,7 +164,7 @@ export const UsersTable = ({ users, onRowDelete, onUpdateUser }) => {
                 <StyledTableCell component="td" scope="row">
                   {row.user_id}
                 </StyledTableCell>
-                <StyledTableCell align="left">{row.user_name}</StyledTableCell>
+                <StyledTableCell align="left">{row.name}</StyledTableCell>
                 <StyledTableCell align="left">{row.email}</StyledTableCell>
                 <StyledTableCell align="left">{row.role}</StyledTableCell>
                 <StyledTableCell align="left">
@@ -179,10 +189,10 @@ export const UsersTable = ({ users, onRowDelete, onUpdateUser }) => {
             )}
           </TableBody>
           <TableFooter>
-            <StyledTableRow>
+            <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={3}
+                colSpan={5}
                 count={users.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
@@ -198,7 +208,7 @@ export const UsersTable = ({ users, onRowDelete, onUpdateUser }) => {
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 ActionsComponent={TablePaginationActions}
               />
-            </StyledTableRow>
+            </TableRow>
           </TableFooter>
         </Table>
       </TableContainer>

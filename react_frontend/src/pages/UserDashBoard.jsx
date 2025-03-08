@@ -12,7 +12,7 @@ import Grid from "@mui/material/Grid2";
 import { useState, useMemo } from "react";
 
 import { LandingPageUser } from "../components/dashBoard/LandingPageUser";
-import { UserBooksTable } from "../components/Books/UserBooksTable";
+import { UserBooksTable } from "../components/books/UserBooksTable";
 
 const Menu = [
   {
@@ -105,7 +105,7 @@ export default function UserDashBoard() {
       branding={{
         logo: "",
         title: "Library Managment System",
-        homeUrl: "/userHome",
+        homeUrl: "/user",
       }}
       navigation={Menu}
       router={router}

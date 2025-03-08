@@ -29,6 +29,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
   },
 }));
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -99,15 +108,15 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export const BorrowReturnTabel = () => {
+export const LoanTabel = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [borrowReturns, setBorrowReturns] = useState([]);
+  const [loans, setLoans] = useState([]);
 
   const baseURL = "http://localhost:3000";
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - books.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - loans.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -118,78 +127,76 @@ export const BorrowReturnTabel = () => {
     setPage(0);
   };
 
-  const fetchBorrowReturns = async () => {
+  const fetchLoans = async () => {
     try {
-      const response = await fetch(`${baseURL}/borrowReturns`);
+      const response = await fetch(`${baseURL}/loans`);
       if (!response.ok) {
         throw error("not found");
       }
 
       const result = await response.json();
-      setBorrowReturns(result);
+      setLoans(result);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    fetchBorrowReturns();
+    fetchLoans();
   }, []);
 
   return (
     <div>
       <TableContainer component={Paper}>
-        <Table sx={{ maxWidth: 650 }} aria-label="custom pagination table">
+        <Table sx={{ maxWidth: 1200 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
-              <StyledTableCell>Borrow/Return id</StyledTableCell>
-              <StyledTableCell align="right">User id</StyledTableCell>
-              <StyledTableCell align="right">Book id</StyledTableCell>
-              <StyledTableCell align="right">Borrowed date</StyledTableCell>
-              <StyledTableCell align="right">Return date</StyledTableCell>
-              <StyledTableCell align="right">status</StyledTableCell>
+              <StyledTableCell>Loan ID</StyledTableCell>
+              <StyledTableCell align="left">User</StyledTableCell>
+              <StyledTableCell align="left">Book</StyledTableCell>
+              <StyledTableCell align="left">Loaned date</StyledTableCell>
+              <StyledTableCell align="left">Return date</StyledTableCell>
+              <StyledTableCell align="left">Returned</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {(rowsPerPage > 0
-              ? borrowReturns.slice(
+              ? loans.slice(
                   page * rowsPerPage,
                   page * rowsPerPage + rowsPerPage
                 )
-              : borrowReturns
+              : loans
             ).map((row) => (
-              <TableRow
-                key={row.borrow_return_id}
-                sx={{ th: { border: 1000 } }}
-              >
+              <StyledTableRow key={row.loan_id} sx={{ th: { border: 1000 } }}>
                 <StyledTableCell component="td" scope="row">
-                  {row.borrow_return_id}
+                  {row.loan_id}
                 </StyledTableCell>
-                <StyledTableCell align="right">{row.book_id}</StyledTableCell>
+                <StyledTableCell align="left">{row.user}</StyledTableCell>
+                <StyledTableCell align="left">{row.book}</StyledTableCell>
 
-                <StyledTableCell align="right">{row.user_id}</StyledTableCell>
-
-                <StyledTableCell align="right">
-                  {row.borrowed_date.slice(0, 10)}
+                <StyledTableCell align="left">
+                  {row.loan_date.slice(0, 10)}
                 </StyledTableCell>
-                <StyledTableCell align="right">
+                <StyledTableCell align="left">
                   {row.return_date.slice(0, 10)}
                 </StyledTableCell>
-                <StyledTableCell align="right">{row.status}</StyledTableCell>
-              </TableRow>
+                <StyledTableCell align="left">
+                  {row.is_returned}
+                </StyledTableCell>
+              </StyledTableRow>
             ))}
             {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
+              <StyledTableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={6} />
-              </TableRow>
+              </StyledTableRow>
             )}
           </TableBody>
           <TableFooter>
             <TableRow>
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={3}
-                count={borrowReturns.length}
+                colSpan={6}
+                count={loans.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 slotProps={{

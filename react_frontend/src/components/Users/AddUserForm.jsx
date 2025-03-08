@@ -5,26 +5,29 @@ import Box from "@mui/material/Box";
 import { useState, useEffect } from "react";
 
 export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [formFields, setFormFields] = useState({
-    user_name: "",
+    name: "",
     email: "",
     password: "",
     role: "",
   });
-  useEffect(() => {
-    if (cleanForm) {
-      setFormFields({
-        fname: "",
-        lname: "",
-        email: "",
-        birthdate: "",
-        gender: "",
-        genderOther: "",
-        password: "",
-        confirmPassword: "",
-      });
-    }
-  }, [cleanForm]);
+  // useEffect(() => {
+  //   if (cleanForm) {
+  //     setFormFields({
+  //       fname: "",
+  //       lname: "",
+  //       email: "",
+  //       birthdate: "",
+  //       gender: "",
+  //       genderOther: "",
+  //       password: "",
+  //       confirmPassword: "",
+  //     });
+  //   }
+  // }, [cleanForm]);
   const style = {
     position: "absolute",
     top: "50%",
@@ -36,29 +39,27 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
     boxShadow: 24,
     p: 4,
   };
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const handleChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
     setFormFields({ ...formFields, [name]: value });
+    console.log(formFields);
   };
   const handleSubmit = async () => {
     let newUser = {
-      user_name: formFields.user_name,
+      name: formFields.name,
       email: formFields.email,
       password: formFields.password,
       role: formFields.role,
     };
     onSubmitUser(newUser);
-    cleanForm(true);
+    // cleanForm(true);
     console.log(newUser);
   };
 
   return (
-    <div>
+    <>
       <Button onClick={handleOpen}>Add a user</Button>
       <Modal
         open={open}
@@ -71,14 +72,14 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
             Add a new user
           </div>
           <div id="modal-modal-description" sx={{ mt: 2 }}>
-            <form onSubmit={handleSubmit}>
+            <form>
               <p>
                 <label>
                   User name
                   <input
                     type="text"
-                    value={formFields.user_name}
-                    name="user_name"
+                    value={formFields.name}
+                    name="name"
                     onChange={handleChange}
                   />
                 </label>
@@ -119,12 +120,12 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
                 </label>
               </p>
               <p>
-                <button type="submit">Add user</button>
+                <button onClick={handleSubmit}>Add user</button>
               </p>
             </form>
           </div>
         </Box>
       </Modal>
-    </div>
+    </>
   );
 };

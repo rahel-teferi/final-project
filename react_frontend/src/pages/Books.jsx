@@ -1,7 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
+
+import { BooksTable } from "../components/books/BooksTable";
 import { AddBookForm } from "../components/Books/AddBookForm";
-import { BooksTable } from "../components/Books/BooksTable";
 
 export const Books = () => {
   const [isLoading, setIsLoading] = useState(true);

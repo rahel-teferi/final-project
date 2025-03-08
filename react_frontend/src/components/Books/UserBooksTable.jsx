@@ -148,7 +148,7 @@ export const UserBooksTable = () => {
   return (
     <div>
       <h1>List of books</h1>
-      <TableContainer>
+      <TableContainer component={Paper}>
         <Table sx={{ maxWidth: 1000 }} aria-label="custom pagination table">
           <TableHead>
             <TableRow>
@@ -180,15 +180,13 @@ export const UserBooksTable = () => {
                 <StyledTableCell align="left">
                   {row.description}
                 </StyledTableCell>
-                <StyledTableCell align="left">
-                  {row.book_status}
-                </StyledTableCell>
+                <StyledTableCell align="left">{row.status}</StyledTableCell>
               </StyledTableRow>
             ))}
             {emptyRows > 0 && (
-              <TableRow style={{ height: 53 * emptyRows }}>
-                <StyledTableCell colSpan={6} />
-              </TableRow>
+              <StyledTableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </StyledTableRow>
             )}
           </TableBody>
           <TableFooter>

@@ -78,30 +78,27 @@ export async function deleteStudent(req, res) {
   }
 }
 
-export async function getBookToBorrow(req, res) {
-  db.query(
-    "select book_id, title, book_status from books",
-    (error, result, fields) => {
-      if (error) {
-        res.status(404).json({ message: error.sqlMessage });
-      } else {
-        res.status(200).json(result);
-      }
+export async function getBooksToLoan(req, res) {
+  db.query("SELECT book_id, title, status FROM books", (error, result) => {
+    if (error) {
+      res.status(404).json({ message: error.sqlMessage });
+    } else {
+      res.status(200).json(result);
     }
-  );
+  });
 }
 
 export async function addBooks(req, res) {
   const reqBody = req.body;
 
   db.query(
-    "INSERT INTO books (title, author, genre, description, book_status) VALUES (?,?, ?, ? ,?)",
+    "INSERT INTO books (title, author, genre, description, status) VALUES (?,?, ?, ? ,?)",
     [
       reqBody.title,
       reqBody.author,
       reqBody.genre,
       reqBody.description,
-      reqBody.book_status,
+      reqBody.status,
     ],
 
     (error, result, field) => {
@@ -116,15 +113,15 @@ export async function addBooks(req, res) {
 
 export async function updateBook(req, res) {
   try {
-    let bookId = Number(req.params.id);
+    let books = Number(req.params.id);
     db.query(
-      `UPDATE books SET title=?, author=?, genre=?, description=? ,book_status=? where book_id=${bookId};`,
+      `UPDATE books SET title=?, author=?, genre=?, description=? ,status=? where book_id=${books};`,
       [
         req.body.title,
         req.body.author,
         req.body.genre,
         req.body.description,
-        req.body.book_status,
+        req.body.status,
       ],
       (err, student) => {
         res.json({ message: "Book has been updated" });

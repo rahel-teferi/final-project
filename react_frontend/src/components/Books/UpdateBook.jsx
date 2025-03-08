@@ -14,7 +14,7 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
     author: data.author,
     genre: data.genre,
     description: data.description,
-    book_status: data.book_status,
+    status: data.status,
   });
 
   const handleChange = (e) => {
@@ -30,7 +30,7 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
       author: values.author,
       genre: values.genre,
       description: values.description,
-      book_status: values.book_status,
+      status: values.status,
     };
     onUpdateBook(updatedBook, values.book_id);
   };
@@ -107,12 +107,12 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
                 <label>
                   Status
                   <select
-                    value={values.book_status}
-                    name="book_status"
+                    value={values.status}
+                    name="status"
                     onChange={handleChange}
                   >
                     <option value="Available">Available</option>
-                    <option value="Borrowed">Borrowed</option>
+                    <option value="Loaned">Loaned</option>
                   </select>
                 </label>
               </p>

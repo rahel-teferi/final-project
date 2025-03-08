@@ -13,7 +13,7 @@ export async function getUsers(req, res) {
     if (req.query.order) {
       sortingOrder = req.query.order;
       db.query(
-        `select * from users ORDER BY ${fieldName} ${sortingOrder}`,
+        `SELECT * FROM users ORDER BY ${fieldName} ${sortingOrder}`,
         (error, result, fields) => {
           res.status(200).json(result);
         }
@@ -29,10 +29,10 @@ export async function getUsers(req, res) {
         res.status(200).json(result);
       }
     );
-  } else if (req.query.user_name) {
-    let searchValue = req.query.user_name;
+  } else if (req.query.name) {
+    let searchValue = req.query.name;
     db.query(
-      "SELECT * FROM users WHERE user_name=?",
+      "SELECT * FROM users WHERE name=?",
       [`${searchValue}`],
       (error, result, fields) => {
         console.log("searched");
@@ -40,14 +40,14 @@ export async function getUsers(req, res) {
       }
     );
   } else {
-    db.query("select * from users", (error, result, fields) => {
+    db.query("SELECT * FROM users", (error, result, fields) => {
       res.status(200).json(result);
     });
   }
 }
 
-export async function getUserToBorrow(req, res) {
-  db.query("select user_id, user_name from users", (error, result, fields) => {
+export async function getUsersToLoan(req, res) {
+  db.query("SELECT user_id, name FROM users", (error, result, fields) => {
     if (error) {
       res.status(404).json({ message: error.sqlMessage });
     } else {
@@ -59,7 +59,7 @@ export async function getUserToBorrow(req, res) {
 export async function getUsersInfo(req, res) {
   let idToShow = Number(req.params.id);
   db.query(
-    `select * from users where user_id=${idToShow} `,
+    `SELECT * FROM users WHERE user_id=${idToShow} `,
     (error, result, fields) => {
       res.status(200).json(result[0]);
       // console.log(result[0]); //this will return the first element of the array
@@ -79,7 +79,7 @@ export async function deleteUser(req, res) {
   } else {
     // parametrized queries
     db.query(
-      "DELETE  FROM users where user_id = ?",
+      "DELETE  FROM users WHERE user_id = ?",
       [idToDelete],
       (error, result, fields) => {
         res.status(200).json({ message: "user deleted" });
@@ -92,8 +92,8 @@ export async function addUser(req, res) {
   const reqBody = req.body;
 
   db.query(
-    "INSERT INTO users (user_name, email, password, role) VALUES (?,?, ?, ? )",
-    [reqBody.user_name, reqBody.email, reqBody.password, reqBody.role],
+    "INSERT INTO users (name, email, password, role) VALUES (?,?, ?, ? )",
+    [reqBody.name, reqBody.email, reqBody.password, reqBody.role],
 
     (error, result, field) => {
       if (error) {
@@ -107,10 +107,10 @@ export async function addUser(req, res) {
 
 export async function updateUser(req, res) {
   try {
-    let bookId = Number(req.params.id);
+    let books = Number(req.params.id);
     db.query(
-      `UPDATE users SET user_name=?, email=?, password=?, role=? where user_id=${bookId};`,
-      [req.body.user_name, req.body.email, req.body.password, req.body.role],
+      `UPDATE users SET name=?, email=?, password=?, role=? WHERE user_id=${books};`,
+      [req.body.name, req.body.email, req.body.password, req.body.role],
       (err, student) => {
         res.json({ message: "User has been updated" });
       }
@@ -129,7 +129,7 @@ export async function updateUser(req, res) {
 
 //     const student = await Student.findOne({
 //       where: {
-//         email: email, //the first is the value from the DB
+//         email: email, //the first is the value FROM the DB
 //       },
 //     });
 
