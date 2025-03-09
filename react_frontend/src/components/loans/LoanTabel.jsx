@@ -19,6 +19,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import { useState, useEffect } from "react";
+import { UpdateLoan } from "./UpdateLoan";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -108,7 +109,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export const LoanTabel = () => {
+export const LoanTabel = ({ onUpdateLoan }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [loans, setLoans] = useState([]);
@@ -182,6 +183,10 @@ export const LoanTabel = () => {
                 </StyledTableCell>
                 <StyledTableCell align="left">
                   {row.is_returned}
+                </StyledTableCell>
+
+                <StyledTableCell align="left">
+                  <UpdateLoan data={row} onUpdateLoan={onUpdateLoan} />
                 </StyledTableCell>
               </StyledTableRow>
             ))}

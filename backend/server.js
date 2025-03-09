@@ -32,6 +32,7 @@ app.post("/user", UsersControllers.addUser);
 app.get("/loans", LoansControllers.getLoans);
 app.get("/loans/:id", LoansControllers.getLoanInfo);
 app.put("/loans/:id", LoansControllers.updateStatus);
+// app.put("/loans/book/:id", LoansControllers.updateBookStatus);
 app.delete("/loans/:id", LoansControllers.deleteLoan);
 app.post("/loans", LoansControllers.addLoan);
 

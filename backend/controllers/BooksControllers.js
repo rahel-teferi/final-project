@@ -79,13 +79,16 @@ export async function deleteStudent(req, res) {
 }
 
 export async function getBooksToLoan(req, res) {
-  db.query("SELECT book_id, title, status FROM books", (error, result) => {
-    if (error) {
-      res.status(404).json({ message: error.sqlMessage });
-    } else {
-      res.status(200).json(result);
+  db.query(
+    "SELECT book_id, title, status FROM books WHERE status='available' ",
+    (error, result) => {
+      if (error) {
+        res.status(404).json({ message: error.sqlMessage });
+      } else {
+        res.status(200).json(result);
+      }
     }
-  });
+  );
 }
 
 export async function addBooks(req, res) {

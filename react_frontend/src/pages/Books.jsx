@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 
 import { BooksTable } from "../components/books/BooksTable";
-import { AddBookForm } from "../components/Books/AddBookForm";
+import { AddBookForm } from "../components/books/AddBookForm";
 
 export const Books = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -25,7 +25,7 @@ export const Books = () => {
 
   useEffect(() => {
     fetchBooks(books);
-  }, [books]);
+  }, []);
 
   const addBook = async (data) => {
     try {

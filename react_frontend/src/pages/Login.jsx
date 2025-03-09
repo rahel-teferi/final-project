@@ -1,6 +1,5 @@
 import React from "react";
-import SignInCard from "../components/LoginForm";
-import books from "/Books.jpg";
+import LoginForm from "../components/LoginForm";
 
 export const Login = () => {
   return (
@@ -15,7 +14,7 @@ export const Login = () => {
     >
       <div style={{ width: "50%" }}>
         <h1 style={{ textAlign: "center" }}>Library managment system</h1>
-        <SignInCard />
+        <LoginForm />
       </div>
       {/* <div style={{ width: "50%" }}>
         <img

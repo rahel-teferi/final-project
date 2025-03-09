@@ -55,15 +55,21 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          {/* <div id="modal-modal-title" variant="h6" component="h2">
-            Add a new book
-          </div> */}
+          <div id="modal-modal-title" variant="h6" component="h2">
+            Add
+          </div>
           <div id="modal-modal-description" sx={{ mt: 2 }}>
             <form onSubmit={handleSubmit} action="/books">
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Book title
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     name="title"
                     value={formFields.title}
@@ -71,10 +77,16 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Book author
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     name="author"
                     value={formFields.author}
@@ -82,10 +94,16 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Book genre
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     name="genre"
                     value={formFields.genre}
@@ -93,10 +111,16 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Description
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     name="description"
                     value={formFields.description}
@@ -104,10 +128,16 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Status
                   <select
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     value={formFields.status}
                     name="status"
                     onChange={handleChange}
@@ -117,7 +147,7 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
                   </select>
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <button type="submit">Add Book</button>
               </p>
             </form>

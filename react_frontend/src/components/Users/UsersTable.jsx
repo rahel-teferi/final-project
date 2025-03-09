@@ -137,7 +137,6 @@ export const UsersTable = ({
   return (
     <div>
       <div>
-        {" "}
         <AddUserForm onSubmitUser={onSubmitUser} />
       </div>
       <TableContainer>

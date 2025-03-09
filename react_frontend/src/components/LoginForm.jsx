@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import MuiCard from "@mui/material/Card";
@@ -13,11 +13,11 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
-import { teal } from "@mui/material/colors";
 
-import { useNavigate } from "react-router-dom";
+import AuthContext from "../components/core/AuthContext";
+import { useNavigate } from "react-router";
 
-const mainColor = teal[100];
+const url = "http://localhost:3000";
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
   minHeight: "100%",
@@ -60,56 +60,56 @@ const Card = styled(MuiCard)(({ theme }) => ({
   }),
 }));
 
-export default function SignInCard() {
-  const [emailError, setEmailError] = useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = useState("");
-  const [passwordError, setPasswordError] = useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
-  const [open, setOpen] = useState(false);
+export default function LoginForm() {
+  const [formFields, setFormFields] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+  const [error, setError] = useState("");
+  const { login } = useContext(AuthContext);
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormFields({
+      ...formFields,
+      [name]: value,
+    });
   };
 
   const handleSubmit = (e) => {
-    if (emailError || passwordError) {
-      e.preventDefault();
-      return;
-    } else {
-      navigate("/admin");
-    }
+    e.preventDefault();
+    let data = {
+      email: formFields.email,
+      password: formFields.password,
+    };
   };
 
-  const validateInputs = () => {
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
+  // const validateInputs = () => {
+  //   const email = document.getElementById("email");
+  //   const password = document.getElementById("password");
 
-    let isValid = true;
+  //   let isValid = true;
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage("");
-    }
+  //   if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+  //     setEmailError(true);
+  //     setEmailErrorMessage("Please enter a valid email address.");
+  //     isValid = false;
+  //   } else {
+  //     // setEmailError(false);
+  //     // setEmailErrorMessage("");
+  //   }
 
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage("");
-    }
+  //   if (!password.value || password.value.length < 6) {
+  //     setPasswordError(true);
+  //     setPasswordErrorMessage("Password must be at least 6 characters long.");
+  //     isValid = false;
+  //   } else {
+  //     setPasswordError(false);
+  //     setPasswordErrorMessage("");
+  //   }
 
-    return isValid;
-  };
+  //   return isValid;
+  // };
   const navigate = useNavigate();
   return (
     <SignInContainer direction="column" justifyContent="center">
@@ -136,8 +136,8 @@ export default function SignInCard() {
           <FormControl>
             <FormLabel htmlFor="email">Email</FormLabel>
             <TextField
-              error={emailError}
-              helperText={emailErrorMessage}
+              // error={emailError}
+              // helperText={emailErrorMessage}
               id="email"
               type="email"
               name="email"
@@ -147,7 +147,7 @@ export default function SignInCard() {
               required
               fullWidth
               variant="outlined"
-              color={emailError ? "error" : "primary"}
+              // color={emailError ? "error" : "primary"}
             />
           </FormControl>
           <FormControl>
@@ -156,7 +156,6 @@ export default function SignInCard() {
               <Link
                 component="button"
                 type="button"
-                onClick={handleClickOpen}
                 variant="body2"
                 sx={{ alignSelf: "baseline" }}
               >
@@ -164,8 +163,8 @@ export default function SignInCard() {
               </Link>
             </Box>
             <TextField
-              error={passwordError}
-              helperText={passwordErrorMessage}
+              // error={passwordError}
+              // helperText={passwordErrorMessage}
               name="password"
               placeholder="••••••"
               type="password"
@@ -175,19 +174,15 @@ export default function SignInCard() {
               required
               fullWidth
               variant="outlined"
-              color={passwordError ? "error" : "primary"}
+              // color={passwordError ? "error" : "primary"}
             />
           </FormControl>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
 
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            onClick={validateInputs}
+            // onClick={validateInputs}
           >
             Login
           </Button>

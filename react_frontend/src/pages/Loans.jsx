@@ -29,6 +29,29 @@ export const Loans = () => {
       console.log(error);
     }
   };
+  const updateBookStatus = async (id) => {
+    console.log(data);
+    try {
+      const response = await fetch(`${baseURL}/loans/book/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(id),
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.log(response);
+        } else {
+          throw new Error("db problem");
+        }
+      }
+      const result = await response.json();
+
+      alert(result.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>

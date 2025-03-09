@@ -10,7 +10,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 
-export const LoanForm = ({ onSubmitLoan }) => {
+export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
   const style = {
     position: "absolute",
     top: "50%",
@@ -36,11 +36,16 @@ export const LoanForm = ({ onSubmitLoan }) => {
     book_id: "",
     loan_date: "",
     return_date: "",
+    status: "",
   });
-  const handleChange = (e) => {
+  const handleChange = (e, i) => {
     e.preventDefault();
     const { name, value } = e.target;
-    setFormFields({ ...formFields, [name]: value });
+    if (books[i].status === "loaned") {
+      alert("already loaned");
+    } else {
+      setFormFields({ ...formFields, [name]: value });
+    }
     console.log(formFields);
   };
 
@@ -82,6 +87,7 @@ export const LoanForm = ({ onSubmitLoan }) => {
       book_id: formFields.book_id,
       loan_date: formFields.loan_date,
       return_date: formFields.return_date,
+      status: formFields.status,
     };
 
     onSubmitLoan(newTransaction);
@@ -103,7 +109,7 @@ export const LoanForm = ({ onSubmitLoan }) => {
 
           <div id="modal-modal-description" sx={{ mt: 2 }}>
             <form onSubmit={handleSubmit}>
-              <div>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   User
                   <select
@@ -111,7 +117,15 @@ export const LoanForm = ({ onSubmitLoan }) => {
                     onChange={handleChange}
                     value={Number(formFields.user_id)}
                     required
+                    placeholder="Search..."
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                   >
+                    <option value="">search</option>
                     {users.map((user) => (
                       <option key={user.user_id} value={user.user_id}>
                         {user.name}
@@ -119,15 +133,23 @@ export const LoanForm = ({ onSubmitLoan }) => {
                     ))}
                   </select>
                 </label>
-              </div>
-              <div>
+              </p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Book
                   <select
                     name="book_id"
                     onChange={handleChange}
-                    value={Number(formFields.book_id)}
+                    value={formFields.book_id}
+                    placeholder="Search..."
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                   >
+                    <option value="">search</option>
                     {books.map((book) => (
                       <option key={book.book_id} value={book.book_id}>
                         {book.title}
@@ -135,8 +157,8 @@ export const LoanForm = ({ onSubmitLoan }) => {
                     ))}
                   </select>
                 </label>
-              </div>
-              <div>
+              </p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Loan date
                   <input
@@ -144,10 +166,16 @@ export const LoanForm = ({ onSubmitLoan }) => {
                     name="loan_date"
                     value={formFields.loan_date}
                     onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                   />
                 </label>
-              </div>
-              <div>
+              </p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Return date
                   <input
@@ -155,23 +183,45 @@ export const LoanForm = ({ onSubmitLoan }) => {
                     name="return_date"
                     value={formFields.return_date}
                     onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                   />
                 </label>
-              </div>
-              <div>
+              </p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Status
                   <select
                     value={formFields.status}
                     name="status"
                     onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                   >
-                    <option value="Loaned">Loaned</option>
+                    <option
+                      style={{
+                        color: "black",
+                        padding: "8px",
+                        cursor: "pointer",
+                        borderBottom: "1px solid #eee",
+                      }}
+                      value="Loaned"
+                    >
+                      Loaned
+                    </option>
                     <option value="Returned">Returned</option>
                   </select>
                 </label>
-              </div>
-              <div>
+              </p>
+              <div style={{ position: "relative", width: "250px" }}>
                 <button type="submit">Add Transaction</button>
               </div>
             </form>

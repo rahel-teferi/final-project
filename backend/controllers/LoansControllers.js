@@ -102,85 +102,90 @@ export async function updateStatus(req, res) {
   }
 }
 
-export async function addLoan(req, res) {
-  const reqBody = req.body;
-  console.log(reqBody);
-  db.query(
-    "SELECT title, status FROM books WHERE book_id = ?",
-    [reqBody.book_id],
-    (err, SELECTedBook) => {
-      console.log(SELECTedBook[0].status);
-      if (SELECTedBook[0].status === "Loaned") {
-        let errMessage = `The book '${SELECTedBook.title}' is already loaned!`;
-        console.error(errMessage);
-        res.status(200).json({ error: errMessage });
-        return;
-      }
-    }
-  );
-
-  db.query(
-    "INSERT INTO loans (user_id, book_id, loan_date, return_date) VALUES (?, ?, ?, ?)",
-    [reqBody.user_id, reqBody.book_id, reqBody.loan_date, reqBody.return_date],
-    (err) => {
-      if (err) {
-        res.status(501).json({ error: err.message });
-        console.error(err.message);
-      } else {
-        res.status(201).json({ message: "Loan added for" });
-      }
-    }
-  );
-}
-
 // export async function addLoan(req, res) {
 //   const reqBody = req.body;
+//   console.log(reqBody);
+// db.query(
+//   "SELECT title, status FROM books WHERE book_id = ?",
+//   [reqBody.book_id],
+//   (err, SELECTedBook) => {
+//     console.log(SELECTedBook[0].status);
+//     if (SELECTedBook[0].status === "Loaned") {
+//       let errMessage = `The book '${SELECTedBook.title}' is already loaned!`;
+//       console.error(errMessage);
+//       res.status(200).json({ error: errMessage });
+//       return;
+//     }
+//   }
+// );
+
 //   db.query(
-//     "SELECT title, status FROM books WHERE book_id = ? LIMIT 1",
-//     [reqBody.book_id],
-//     (err, SELECTedBook) => {
-//       console.log(SELECTedBook[0].status);
-//       if (SELECTedBook[0].status === "Loaned") {
-//         let errMessage = `The book '${SELECTedBook[0].title}' is already loaned!`;
-//         console.error(errMessage);
-//         res.status(200).json({ error: errMessage });
-//         return;
+//     "INSERT INTO loans (user_id, book_id, loan_date, return_date) VALUES (?, ?, ?, ?) ",
+//     [reqBody.user_id, reqBody.book_id, reqBody.loan_date, reqBody.return_date],
+//     (err) => {
+//       if (err) {
+//         res.status(501).json({ error: err.message });
+//         console.error(err.message);
+//       } else {
+//         res.status(201).json({ message: "Loan added for" });
 //       }
 //     }
 //   );
-
-//   db.beginTransaction();
-//   try {
-//     db.query(
-//       "INSERT INTO loans (user_id, book_id, loan_date, return_date) VALUES (?, ?, ?, ?)",
-//       [
-//         reqBody.user_id,
-//         reqBody.book_id,
-//         reqBody.loan_date,
-//         reqBody.return_date,
-//       ],
-//       (err) => {
-//         if (err) {
-//           throw new Error(err);
-//         }
-//       }
-//     );
-
-//     db.query(
-//       "UPDATE books SET status='Loaned' where book_id=?",
-//       [reqBody.book_id],
-//       (err) => {
-//         if (err) {
-//           throw new Error(err);
-//         } else {
-//           res.status(201).json({ message: "Loan succesful" });
-//         }
-//       }
-//     );
-//   } catch (error) {
-//     db.rollback();
-//     res.status(501).json({ error: err.message });
-//     console.error(err.message);
-//     console.error("Transaction failed:", error);
-//   }
 // }
+// export async function updateBookStatus(req, res) {
+//   const reqBody = req.body;
+//   db.query(
+//     "UPDATE books SET status='loaned' where book_id=?",
+//     [reqBody.book_id],
+//     (err) => {
+//       if (err) {
+//         throw new Error(err);
+//       } else {
+//         res.status(200).json({ message: "Book updated" });
+//       }
+//     }
+//   );
+// }
+
+export async function addLoan(req, res) {
+  const { book_id, user_id, loan_date, return_date, status } = req.body;
+  if (status === "loaned") {
+    return res.status(400).json({ error: "Book already loaned" });
+  } else {
+    db.beginTransaction((err) => {
+      const insertOrderQuery = `INSERT INTO loans (book_id, user_id, loan_date, return_date) VALUES (?, ?, ?,? )`;
+      db.query(
+        insertOrderQuery,
+        [book_id, user_id, loan_date, return_date],
+        (err, result) => {
+          if (err) {
+            return db.rollback(() => {
+              res.status(500).json({ error: "Loan failed" });
+            });
+          }
+          const updateInventoryQuery = `UPDATE books SET status = 'loaned' WHERE book_id = ?`;
+          db.query(updateInventoryQuery, [book_id], (err, updateResult) => {
+            if (err || updateResult.affectedRows === 0) {
+              return db.rollback(() => {
+                res.status(400).json({ error: "Book  already loaned" });
+              });
+            }
+
+            // Commit transaction if both queries succeed
+            db.commit((err) => {
+              if (err) {
+                return db.rollback(() => {
+                  res.status(500).json({ error: "loan commit failed" });
+                });
+              }
+
+              res.status(201).json({
+                message: "Loan successfull",
+              });
+            });
+          });
+        }
+      );
+    });
+  }
+}

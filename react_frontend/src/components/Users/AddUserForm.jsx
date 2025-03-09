@@ -33,7 +33,7 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 500,
+    width: 400,
     bgcolor: "background.paper",
     border: "2px solid #000",
     boxShadow: 24,
@@ -73,10 +73,16 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
           </div>
           <div id="modal-modal-description" sx={{ mt: 2 }}>
             <form>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   User name
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     value={formFields.name}
                     name="name"
@@ -84,10 +90,16 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Email
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     value={formFields.email}
                     name="email"
@@ -95,10 +107,16 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Password
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     value={formFields.password}
                     name="password"
@@ -106,10 +124,16 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Role
                   <select
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     value={formFields.role}
                     name="role"
                     onChange={handleChange}
@@ -119,7 +143,7 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
                   </select>
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <button onClick={handleSubmit}>Add user</button>
               </p>
             </form>
