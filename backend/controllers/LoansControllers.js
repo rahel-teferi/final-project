@@ -1,10 +1,4 @@
-import mysql from "mysql2";
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "DataSQL",
-  database: "library_managment_system",
-});
+import { db } from "../server.js";
 
 export async function getLoans(req, res) {
   if (req.query.sort) {
@@ -52,6 +46,26 @@ export async function getLoans(req, res) {
   }
 }
 
+export async function getBooksLoaned(req, res) {
+  let userId = Number(req.params.id);
+
+  db.query(
+    `SELECT loans.*, users.name AS user, books.title AS book 
+      FROM library_managment_system.loans 
+      JOIN users USING(user_id) 
+      JOIN books USING(book_id) WHERE user_id = ?; `,
+    [userId],
+    (error, result) => {
+      if (error) {
+        res.status(404).json({ message: error.message });
+      } else {
+        res.status(200).json(result);
+        console.log(result);
+      }
+    }
+  );
+}
+
 export const getLoanInfo = async (req, res) => {
   let idToShow = Number(req.params.id);
   db.query(
@@ -84,24 +98,6 @@ export async function deleteLoan(req, res) {
   }
 }
 
-export async function updateStatus(req, res) {
-  try {
-    let books = Number(req.params.id);
-    db.query(
-      `UPDATE students SET name=?, email=?, password=?, role=? where user_id=books;`,
-      [req.body.name, req.body.email, req.body.password, req.body.role],
-      (err, student) => {
-        res.json({ message: "User has been updated" });
-      }
-    );
-  } catch (error) {
-    console.error("Error updating user:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while updating the user." });
-  }
-}
-
 // export async function addLoan(req, res) {
 //   const reqBody = req.body;
 //   console.log(reqBody);
@@ -119,43 +115,14 @@ export async function updateStatus(req, res) {
 //   }
 // );
 
-//   db.query(
-//     "INSERT INTO loans (user_id, book_id, loan_date, return_date) VALUES (?, ?, ?, ?) ",
-//     [reqBody.user_id, reqBody.book_id, reqBody.loan_date, reqBody.return_date],
-//     (err) => {
-//       if (err) {
-//         res.status(501).json({ error: err.message });
-//         console.error(err.message);
-//       } else {
-//         res.status(201).json({ message: "Loan added for" });
-//       }
-//     }
-//   );
-// }
-// export async function updateBookStatus(req, res) {
-//   const reqBody = req.body;
-//   db.query(
-//     "UPDATE books SET status='loaned' where book_id=?",
-//     [reqBody.book_id],
-//     (err) => {
-//       if (err) {
-//         throw new Error(err);
-//       } else {
-//         res.status(200).json({ message: "Book updated" });
-//       }
-//     }
-//   );
-// }
-
 export async function addLoan(req, res) {
   const { book_id, user_id, loan_date, return_date, status } = req.body;
   if (status === "loaned") {
     return res.status(400).json({ error: "Book already loaned" });
   } else {
     db.beginTransaction((err) => {
-      const insertOrderQuery = `INSERT INTO loans (book_id, user_id, loan_date, return_date) VALUES (?, ?, ?,? )`;
       db.query(
-        insertOrderQuery,
+        `INSERT INTO loans (book_id, user_id, loan_date, return_date) VALUES (?, ?, ?,? )`,
         [book_id, user_id, loan_date, return_date],
         (err, result) => {
           if (err) {
@@ -163,29 +130,72 @@ export async function addLoan(req, res) {
               res.status(500).json({ error: "Loan failed" });
             });
           }
-          const updateInventoryQuery = `UPDATE books SET status = 'loaned' WHERE book_id = ?`;
-          db.query(updateInventoryQuery, [book_id], (err, updateResult) => {
-            if (err || updateResult.affectedRows === 0) {
-              return db.rollback(() => {
-                res.status(400).json({ error: "Book  already loaned" });
-              });
-            }
-
-            // Commit transaction if both queries succeed
-            db.commit((err) => {
-              if (err) {
+          db.query(
+            `UPDATE books SET status = 'loaned' WHERE book_id = ?`,
+            [book_id],
+            (err, updateResult) => {
+              if (err || updateResult.affectedRows === 0) {
                 return db.rollback(() => {
-                  res.status(500).json({ error: "loan commit failed" });
+                  res.status(400).json({ error: "Book  already loaned" });
                 });
               }
 
-              res.status(201).json({
-                message: "Loan successfull",
+              // Commit transaction if both queries succeed
+              db.commit((err) => {
+                if (err) {
+                  return db.rollback(() => {
+                    res.status(500).json({ error: "loan commit failed" });
+                  });
+                }
+
+                res.status(201).json({
+                  message: "Loan successfull",
+                });
               });
-            });
-          });
+            }
+          );
         }
       );
     });
   }
+}
+
+export async function updateLoan(req, res) {
+  const { book_id, loan_id, return_date, is_returned } = req.body;
+  db.beginTransaction((err) => {
+    db.query(
+      "UPDATE loans SET return_date=?, is_returned=? WHERE loan_id=?",
+      [return_date, is_returned, loan_id],
+      (err, result) => {
+        if (err) {
+          return db.rollback(() => {
+            res.status(500).json({ error: "Loan update failed" });
+          });
+        }
+        db.query(
+          `UPDATE books SET status = 'available' WHERE book_id = ?`,
+          [book_id],
+          (err, updateResult) => {
+            if (err || updateResult.affectedRows === 0) {
+              return db.rollback(() => {
+                res.status(400).json({ error: err.sqlmessage });
+              });
+            }
+            // Commit transaction if both queries succeed
+            db.commit((err) => {
+              if (err) {
+                return db.rollback(() => {
+                  res.status(500).json({ error: "loan return failed" });
+                });
+              }
+
+              res.status(200).json({
+                message: "Return successfull",
+              });
+            });
+          }
+        );
+      }
+    );
+  });
 }

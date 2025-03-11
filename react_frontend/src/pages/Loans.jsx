@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { LoanTabel } from "../components/Loans/LoanTabel.jsx";
 import { LoanForm } from "../components/loans/LoanForm.jsx";
 
 export const Loans = () => {
+  const [loans, setLoans] = useState([]);
+
   const baseURL = "http://localhost:3000";
 
   const addLoan = async (data) => {
@@ -29,12 +31,11 @@ export const Loans = () => {
       console.log(error);
     }
   };
-  const updateBookStatus = async (id) => {
-    console.log(data);
+  const updateLoan = async (data, id) => {
     try {
-      const response = await fetch(`${baseURL}/loans/book/${id}`, {
+      const response = await fetch(`${baseURL}/loans/${id}`, {
         method: "PUT",
-        body: JSON.stringify(id),
+        body: JSON.stringify(data),
         headers: { "Content-Type": "application/json;charset=utf-8" },
       });
 
@@ -46,19 +47,39 @@ export const Loans = () => {
         }
       }
       const result = await response.json();
-
+      console.log(result);
       alert(result.message);
+      fetchLoans();
+      // setCleanForm(true);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const fetchLoans = async () => {
+    try {
+      const response = await fetch(`${baseURL}/loans`);
+
+      if (!response.ok) {
+        throw error("not found");
+      }
+
+      const result = await response.json();
+      setLoans(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLoans();
+  }, []);
   return (
     <div>
       <h1>Loan/ Return Managment</h1>
       <LoanForm onSubmitLoan={addLoan} />
 
-      <LoanTabel />
+      <LoanTabel loans={loans} onUpdateLoan={updateLoan} />
     </div>
   );
 };

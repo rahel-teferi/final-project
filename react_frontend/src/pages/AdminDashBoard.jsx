@@ -12,9 +12,10 @@ import Grid from "@mui/material/Grid2";
 import { useState, useMemo } from "react";
 import { Books } from "./Books";
 import { Users } from "./Users";
-import { LandingPageUser } from "../components/dashBoard/LandingPageUser";
+import { Profile } from "../components/dashBoard/Profile";
 import { Loans } from "./Loans";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import { Link } from "react-router-dom";
 
 const Menu = [
   {
@@ -37,11 +38,16 @@ const Menu = [
     icon: <ShoppingCartIcon />,
   },
   {
+    segment: "Profile",
+    title: "Personal information",
+    icon: <ShoppingCartIcon />,
+  },
+  {
     kind: "divider",
   },
   {
     kind: "header",
-    title: "Analytics",
+    title: "Reports",
   },
   {
     segment: "reports",
@@ -49,13 +55,13 @@ const Menu = [
     icon: <BarChartIcon />,
     children: [
       {
-        segment: "sales",
-        title: "Sales",
+        segment: "monthly",
+        title: "Monthly",
         icon: <DescriptionIcon />,
       },
       {
-        segment: "sales2",
-        title: "Sales",
+        segment: "yearly",
+        title: "Yearly",
         icon: <DescriptionIcon />,
       },
     ],
@@ -98,14 +104,15 @@ const Skeleton = styled("div")(({ theme, height }) => ({
 }));
 
 export default function AdminDashBoard() {
-  const router = useDemoRouter("/hello");
+  const router = useDemoRouter("/Profile");
 
   return (
     <AppProvider
       branding={{
         logo: "",
         title: "Library Managment System",
-        homeUrl: "/hello",
+        homeUrl: "/Profile",
+        style: { marginLeft: "100px" },
       }}
       navigation={Menu}
       router={router}
@@ -119,10 +126,7 @@ export default function AdminDashBoard() {
               {router.pathname === "/books" && <Books />}
               {router.pathname === "/users" && <Users />}
               {router.pathname === "/loans" && <Loans />}
-              {router.pathname === "/hello" && <LandingPageUser />}
-              {router.pathname !== "books" &&
-                router.pathname !== "users" &&
-                router.pathname === "/loans" && <Skeleton height={14} />}
+              {router.pathname === "/Profile" && <Profile />}
             </Grid>
           </Grid>
         </PageContainer>

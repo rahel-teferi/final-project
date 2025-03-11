@@ -13,23 +13,9 @@ export const Login = () => {
       }}
     >
       <div style={{ width: "50%" }}>
-        <h1 style={{ textAlign: "center" }}>Library managment system</h1>
+        <h1 style={{ textAlign: "center" }}>Library management system</h1>
         <LoginForm />
       </div>
-      {/* <div style={{ width: "50%" }}>
-        <img
-          style={{
-            display: "flex",
-            width: "100%",
-            height: "90vh",
-            objectFit: "contain",
-            alignItems: "center",
-            textAlign: "center",
-            justifyContent: "center",
-          }}
-          src={books}
-        /> */}
-      {/* </div> */}
     </div>
   );
 };

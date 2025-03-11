@@ -12,12 +12,17 @@ import Paper from "@mui/material/Paper";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import { styled } from "@mui/material/styles";
+
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import IconButton from "@mui/material/IconButton";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
+import { useState, useEffect } from "react";
+import AuthContext from "../core/AuthContext";
+import { useContext } from "react";
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -38,9 +43,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-import { useState, useEffect } from "react";
-import { UpdateBook } from "./UpdateBook";
-import { AddBookForm } from "./AddBookForm";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -110,13 +112,34 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export const BooksTable = ({ onUpdateBook, onRowDelete, books }) => {
+export const UserloanedTable = () => {
+  const [loanedBooks, setLoanedBooks] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const baseURL = "http://localhost:3000";
+  const { user } = useContext(AuthContext);
+
+  const fetchLoanedBooks = async () => {
+    try {
+      const response = await fetch(`${baseURL}/loans/users/${user.userId}`);
+
+      if (!response.ok) {
+        throw error("not found");
+      }
+      const result = await response.json();
+      setLoanedBooks(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchLoanedBooks();
+  }, []);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - books.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - loanedBooks.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -126,89 +149,80 @@ export const BooksTable = ({ onUpdateBook, onRowDelete, books }) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  return (
-    <>
-      <TableContainer component={Paper}>
-        <Table sx={{ maxWidth: 1200 }} aria-label="custom pagination table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Book id</StyledTableCell>
-              <StyledTableCell align="left">Title</StyledTableCell>
-              <StyledTableCell align="left">Author</StyledTableCell>
-              <StyledTableCell align="left">Genre</StyledTableCell>
-              <StyledTableCell align="left">description</StyledTableCell>
-              <StyledTableCell align="left">Staus</StyledTableCell>
-              <StyledTableCell align="left">Edit</StyledTableCell>
-              <StyledTableCell align="left">Delete</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? books.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : books
-            ).map((row) => (
-              <StyledTableRow key={row.book_id} sx={{ th: { border: 1000 } }}>
-                <StyledTableCell component="td" scope="row">
-                  {row.book_id}
-                </StyledTableCell>
-                <StyledTableCell align="left" scope="row">
-                  {row.title}
-                </StyledTableCell>
-                <StyledTableCell align="left">{row.author}</StyledTableCell>
-                <StyledTableCell align="left">{row.genre}</StyledTableCell>
-                <StyledTableCell align="left">
-                  {row.description}
-                </StyledTableCell>
-                <StyledTableCell align="left">{row.status}</StyledTableCell>
-                <StyledTableCell align="left">
-                  <UpdateBook data={row} onUpdateBook={onUpdateBook} />
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <button
-                    data-id={row.book_id}
-                    onClick={(e) => {
-                      onRowDelete(row.book_id, e);
-                    }}
-                  >
-                    Delete
-                  </button>
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-            {emptyRows > 0 && (
-              <StyledTableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
-              </StyledTableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={6}
-                count={books.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                slotProps={{
-                  select: {
-                    inputProps: {
-                      "aria-label": "rows per page",
+  if (loanedBooks.length === 0) {
+    return <h3>No loaned books yet</h3>;
+  } else {
+    return (
+      <div>
+        <h1>List of loaned books</h1>
+        <TableContainer component={Paper}>
+          <Table sx={{ maxWidth: 1000 }} aria-label="custom pagination table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Loan Id</StyledTableCell>
+                <StyledTableCell align="left">Title</StyledTableCell>
+                <StyledTableCell align="left">Loan date</StyledTableCell>
+                <StyledTableCell align="left">Return date</StyledTableCell>
+                <StyledTableCell align="left">Returned</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {(rowsPerPage > 0
+                ? loanedBooks.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : loanedBooks
+              ).map((row) => (
+                <StyledTableRow key={row.loan_id} sx={{ th: { border: 1000 } }}>
+                  <StyledTableCell component="td" scope="row">
+                    {row.loan_id}
+                  </StyledTableCell>
+                  <StyledTableCell align="left" scope="row">
+                    {row.book}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    {row.loan_date}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    {row.return_date}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    {row.is_returned}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+              {emptyRows > 0 && (
+                <StyledTableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </StyledTableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                  colSpan={3}
+                  count={loanedBooks.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  slotProps={{
+                    select: {
+                      inputProps: {
+                        "aria-label": "rows per page",
+                      },
+                      native: true,
                     },
-                    native: true,
-                  },
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-    </>
-  );
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      </div>
+    );
+  }
 };

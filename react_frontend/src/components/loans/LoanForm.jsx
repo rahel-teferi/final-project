@@ -36,22 +36,21 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
     book_id: "",
     loan_date: "",
     return_date: "",
-    status: "",
+    is_returned: "",
   });
+  const baseURL = "http://localhost:3000";
   const handleChange = (e, i) => {
     e.preventDefault();
     const { name, value } = e.target;
-    if (books[i].status === "loaned") {
-      alert("already loaned");
-    } else {
-      setFormFields({ ...formFields, [name]: value });
-    }
+
+    setFormFields({ ...formFields, [name]: value });
+
     console.log(formFields);
   };
 
   const getBooksToSearch = async () => {
     try {
-      const response = await fetch("http://localhost:3000/loans/books");
+      const response = await fetch(`${baseURL}/books/loans`);
       if (!response.ok) {
         throw new Error("not found");
       }
@@ -63,11 +62,11 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
   };
 
   useEffect(() => {
-    getBooksToSearch();
+    getBooksToSearch(books);
   }, []);
 
   function getUsersToSearch() {
-    fetch("http://localhost:3000/loans/users")
+    fetch(`${baseURL}/users`)
       .then((response) => {
         return response.json();
       })
@@ -78,7 +77,7 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
   }
 
   useEffect(() => {
-    getUsersToSearch();
+    getUsersToSearch(users);
   }, []);
 
   const handleSubmit = async () => {
@@ -87,9 +86,9 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
       book_id: formFields.book_id,
       loan_date: formFields.loan_date,
       return_date: formFields.return_date,
-      status: formFields.status,
+      is_returned: formFields.is_returned,
     };
-
+    handleClose();
     onSubmitLoan(newTransaction);
   };
 
@@ -104,14 +103,14 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
       >
         <Box sx={style}>
           <div id="modal-modal-title" variant="h6" component="h2">
-            Add
+            Add Loan
           </div>
 
           <div id="modal-modal-description" sx={{ mt: 2 }}>
             <form onSubmit={handleSubmit}>
               <p style={{ position: "relative", width: "250px" }}>
                 <label>
-                  User
+                  User name
                   <select
                     name="user_id"
                     onChange={handleChange}
@@ -119,7 +118,7 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
                     required
                     placeholder="Search..."
                     style={{
-                      width: "100%",
+                      width: "250px",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
@@ -136,18 +135,19 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
               </p>
               <p style={{ position: "relative", width: "250px" }}>
                 <label>
-                  Book
+                  Book title
                   <select
                     name="book_id"
                     onChange={handleChange}
                     value={formFields.book_id}
                     placeholder="Search..."
                     style={{
-                      width: "100%",
+                      width: "250px",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
                     }}
+                    required
                   >
                     <option value="">search</option>
                     {books.map((book) => (
@@ -167,7 +167,7 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
                     value={formFields.loan_date}
                     onChange={handleChange}
                     style={{
-                      width: "100%",
+                      width: "250px",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
@@ -184,45 +184,39 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
                     value={formFields.return_date}
                     onChange={handleChange}
                     style={{
-                      width: "100%",
+                      width: "250px",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
                     }}
+                    required
                   />
                 </label>
               </p>
               <p style={{ position: "relative", width: "250px" }}>
                 <label>
-                  Status
+                  Returned
                   <select
-                    value={formFields.status}
-                    name="status"
+                    value={formFields.is_returned}
+                    name="is_returned"
                     onChange={handleChange}
                     style={{
-                      width: "100%",
+                      width: "250px",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
                     }}
+                    required
                   >
-                    <option
-                      style={{
-                        color: "black",
-                        padding: "8px",
-                        cursor: "pointer",
-                        borderBottom: "1px solid #eee",
-                      }}
-                      value="Loaned"
-                    >
-                      Loaned
-                    </option>
-                    <option value="Returned">Returned</option>
+                    <option value="No">No</option>
+                    <option value="Yes">Yes</option>
                   </select>
                 </label>
               </p>
               <div style={{ position: "relative", width: "250px" }}>
-                <button type="submit">Add Transaction</button>
+                <Button variant="contained" type="submit">
+                  Loan
+                </Button>
               </div>
             </form>
           </div>

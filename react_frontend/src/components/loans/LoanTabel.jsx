@@ -109,12 +109,10 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export const LoanTabel = ({ onUpdateLoan }) => {
+export const LoanTabel = ({ loans, onUpdateLoan }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [loans, setLoans] = useState([]);
 
-  const baseURL = "http://localhost:3000";
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - loans.length) : 0;
@@ -128,24 +126,6 @@ export const LoanTabel = ({ onUpdateLoan }) => {
     setPage(0);
   };
 
-  const fetchLoans = async () => {
-    try {
-      const response = await fetch(`${baseURL}/loans`);
-      if (!response.ok) {
-        throw error("not found");
-      }
-
-      const result = await response.json();
-      setLoans(result);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchLoans();
-  }, []);
-
   return (
     <div>
       <TableContainer component={Paper}>
@@ -158,6 +138,7 @@ export const LoanTabel = ({ onUpdateLoan }) => {
               <StyledTableCell align="left">Loaned date</StyledTableCell>
               <StyledTableCell align="left">Return date</StyledTableCell>
               <StyledTableCell align="left">Returned</StyledTableCell>
+              <StyledTableCell align="left"></StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>

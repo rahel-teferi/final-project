@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export const UpdateBook = ({ data, onUpdateBook }) => {
   const [open, setOpen] = useState(false);
@@ -32,6 +32,7 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
       description: values.description,
       status: values.status,
     };
+    handleClose();
     onUpdateBook(updatedBook, values.book_id);
   };
 
@@ -59,10 +60,16 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
         <Box sx={style}>
           <div id="modal-modal-description" sx={{ mt: 2 }}>
             <form onSubmit={handleEdit}>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Book title
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     name="title"
                     value={values.title}
@@ -70,10 +77,16 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Book author
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     name="author"
                     value={values.author}
@@ -81,10 +94,16 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Book genre
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     name="genre"
                     value={values.genre}
@@ -92,10 +111,16 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Description
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     name="description"
                     value={values.description}
@@ -103,22 +128,30 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Status
                   <select
                     value={values.status}
                     name="status"
                     onChange={handleChange}
+                    style={{
+                      width: "250px",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                   >
-                    <option value="Available">Available</option>
-                    <option value="Loaned">Loaned</option>
+                    <option value="available">Available</option>
+                    <option value="loaned">Loaned</option>
                   </select>
                 </label>
               </p>
 
               <p>
-                <button type="submit">update</button>
+                <Button variant="contained" type="submit">
+                  update
+                </Button>
               </p>
             </form>
           </div>

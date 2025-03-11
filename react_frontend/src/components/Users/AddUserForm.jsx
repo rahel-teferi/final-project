@@ -2,9 +2,9 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
+export const AddUserForm = ({ onSubmitUser }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -14,20 +14,7 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
     password: "",
     role: "",
   });
-  // useEffect(() => {
-  //   if (cleanForm) {
-  //     setFormFields({
-  //       fname: "",
-  //       lname: "",
-  //       email: "",
-  //       birthdate: "",
-  //       gender: "",
-  //       genderOther: "",
-  //       password: "",
-  //       confirmPassword: "",
-  //     });
-  //   }
-  // }, [cleanForm]);
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -44,18 +31,17 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
     e.preventDefault();
     const { name, value } = e.target;
     setFormFields({ ...formFields, [name]: value });
-    console.log(formFields);
   };
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     let newUser = {
       name: formFields.name,
       email: formFields.email,
       password: formFields.password,
       role: formFields.role,
     };
+    handleClose();
     onSubmitUser(newUser);
-    // cleanForm(true);
-    console.log(newUser);
   };
 
   return (
@@ -69,10 +55,10 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
       >
         <Box sx={style}>
           <div id="modal-modal-title" variant="h6" component="h2">
-            Add a new user
+            New user
           </div>
           <div id="modal-modal-description" sx={{ mt: 2 }}>
-            <form>
+            <form onSubmit={handleSubmit}>
               <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   User name
@@ -87,6 +73,7 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
                     value={formFields.name}
                     name="name"
                     onChange={handleChange}
+                    required
                   />
                 </label>
               </p>
@@ -95,15 +82,16 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
                   Email
                   <input
                     style={{
-                      width: "100%",
+                      width: "250px",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
                     }}
-                    type="text"
+                    type="email"
                     value={formFields.email}
                     name="email"
                     onChange={handleChange}
+                    required
                   />
                 </label>
               </p>
@@ -117,10 +105,11 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
                       borderRadius: "4px",
                       border: "1px solid #ccc",
                     }}
-                    type="text"
+                    type="password"
                     value={formFields.password}
                     name="password"
                     onChange={handleChange}
+                    required
                   />
                 </label>
               </p>
@@ -129,7 +118,7 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
                   Role
                   <select
                     style={{
-                      width: "100%",
+                      width: "250px",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
@@ -137,6 +126,7 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
                     value={formFields.role}
                     name="role"
                     onChange={handleChange}
+                    required
                   >
                     <option value="Admin">Admin</option>
                     <option value="Member">Member</option>
@@ -144,7 +134,9 @@ export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
                 </label>
               </p>
               <p style={{ position: "relative", width: "250px" }}>
-                <button onClick={handleSubmit}>Add user</button>
+                <Button variant="contained" type="submit">
+                  Add user
+                </Button>
               </p>
             </form>
           </div>

@@ -1,10 +1,4 @@
-import mysql from "mysql2";
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "DataSQL",
-  database: "library_managment_system",
-});
+import { db } from "../server.js";
 
 export async function getBooks(req, res) {
   if (req.query.sort) {
@@ -40,7 +34,7 @@ export async function getBooks(req, res) {
       }
     );
   } else {
-    db.query("select * from books", (error, result, fields) => {
+    db.query("select * from books ORDER BY title", (error, result, fields) => {
       res.status(200).json(result);
     });
   }
@@ -61,26 +55,48 @@ export const getBooksInfo = async (req, res) => {
 
 export async function deleteStudent(req, res) {
   let idToDelete = Number(req.params.id);
-  console.log(idToDelete);
-  console.log(req.method);
-  // validation
-  if (typeof idToDelete !== "number") {
-    res.status(404).json({ message: "book not found" });
-  } else {
-    // parametrized queries
+  db.beginTransaction((err) => {
     db.query(
-      "DELETE  FROM books where book_id = ?",
+      "DELETE  FROM books WHERE book_id = ?",
       [idToDelete],
       (error, result, fields) => {
-        res.status(200).json({ message: "Book deleted" });
+        if (error) {
+          return db.rollback(() => {
+            res.status(500).json({ error: "Book Deletion failed" });
+          });
+        }
+        db.query(
+          "DELETE FROM loans where book_id=?",
+          [idToDelete],
+          (err, result) => {
+            if (err || result.affectedRows === 0) {
+              return db.rollback(() => {
+                res.status(400).json({ error: "Book Deletion failed" });
+              });
+            }
+
+            // Commit transaction if both queries succeed
+            db.commit((err) => {
+              if (err) {
+                return db.rollback(() => {
+                  res.status(500).json({ error: "loan commit failed" });
+                });
+              }
+
+              res.status(201).json({
+                message: "Deletion successfull",
+              });
+            });
+          }
+        );
       }
     );
-  }
+  });
 }
 
 export async function getBooksToLoan(req, res) {
   db.query(
-    "SELECT book_id, title, status FROM books WHERE status='available' ",
+    "SELECT book_id, title, status FROM books WHERE status='available' ORDER BY title",
     (error, result) => {
       if (error) {
         res.status(404).json({ message: error.sqlMessage });
@@ -92,17 +108,11 @@ export async function getBooksToLoan(req, res) {
 }
 
 export async function addBooks(req, res) {
-  const reqBody = req.body;
+  const { title, author, genre, description, status } = req.body;
 
   db.query(
     "INSERT INTO books (title, author, genre, description, status) VALUES (?,?, ?, ? ,?)",
-    [
-      reqBody.title,
-      reqBody.author,
-      reqBody.genre,
-      reqBody.description,
-      reqBody.status,
-    ],
+    [title, author, genre, description, status],
 
     (error, result, field) => {
       if (error) {
@@ -115,25 +125,25 @@ export async function addBooks(req, res) {
 }
 
 export async function updateBook(req, res) {
-  try {
-    let books = Number(req.params.id);
-    db.query(
-      `UPDATE books SET title=?, author=?, genre=?, description=? ,status=? where book_id=${books};`,
-      [
-        req.body.title,
-        req.body.author,
-        req.body.genre,
-        req.body.description,
-        req.body.status,
-      ],
-      (err, student) => {
+  let bookId = Number(req.params.id);
+  db.query(
+    `UPDATE books SET title=?, author=?, genre=?, description=? ,status=? where book_id=${bookId};`,
+    [
+      req.body.title,
+      req.body.author,
+      req.body.genre,
+      req.body.description,
+      req.body.status,
+    ],
+    (err, student) => {
+      if (err) {
+        console.error("Error updating student:", err);
+        res
+          .status(500)
+          .json({ message: "An error occurred while updating the student." });
+      } else {
         res.json({ message: "Book has been updated" });
       }
-    );
-  } catch (error) {
-    console.error("Error updating student:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while updating the student." });
-  }
+    }
+  );
 }

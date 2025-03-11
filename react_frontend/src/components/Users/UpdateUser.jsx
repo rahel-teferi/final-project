@@ -30,6 +30,7 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
       password: values.password,
       role: values.role,
     };
+    setOpen(false);
     onUpdateUser(updatedUser, data.user_id);
   };
 
@@ -57,10 +58,16 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
         <Box sx={style}>
           <div id="modal-modal-description" sx={{ mt: 2 }}>
             <form onSubmit={handleEdit}>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   User name
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     name="name"
                     value={values.name}
@@ -68,10 +75,16 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Email
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     name="email"
                     value={values.email}
@@ -79,10 +92,16 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
                   />
                 </label>
               </p>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Password
                   <input
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                     type="text"
                     name="password"
                     value={values.password}
@@ -91,13 +110,19 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
                 </label>
               </p>
 
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Role
                   <select
                     value={values.role}
                     name="role"
                     onChange={handleChange}
+                    style={{
+                      width: "250px",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
                   >
                     <option value="Admin">Admin</option>
                     <option value="Member">Member</option>
@@ -105,8 +130,10 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
                 </label>
               </p>
 
-              <p>
-                <button type="submit">update</button>
+              <p style={{ position: "relative", width: "250px" }}>
+                <Button variant="contained" type="submit">
+                  Update
+                </Button>
               </p>
             </form>
           </div>

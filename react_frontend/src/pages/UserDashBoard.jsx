@@ -1,18 +1,16 @@
 import * as React from "react";
 import { extendTheme, styled } from "@mui/material/styles";
 import PeopleIcon from "@mui/icons-material/Dashboard";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import DescriptionIcon from "@mui/icons-material/Description";
 import LayersIcon from "@mui/icons-material/Layers";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { PageContainer } from "@toolpad/core/PageContainer";
 import Grid from "@mui/material/Grid2";
-import { useState, useMemo } from "react";
-
-import { LandingPageUser } from "../components/dashBoard/LandingPageUser";
+import { useState, useMemo, useContext } from "react";
+import { Profile } from "../components/dashBoard/Profile";
 import { UserBooksTable } from "../components/books/UserBooksTable";
+import { UserloanedTable } from "../components/books/UserLoanedTable";
+import AuthContext from "../components/core/AuthContext.jsx";
 
 const Menu = [
   {
@@ -21,12 +19,17 @@ const Menu = [
   },
   {
     segment: "userBookTable",
-    title: "UserBookTable",
+    title: "Books list",
     icon: <PeopleIcon />,
   },
   {
-    segment: "integrations",
-    title: "Integrations",
+    segment: "Profile",
+    title: "Personal information",
+    icon: <PeopleIcon />,
+  },
+  {
+    segment: "loaned",
+    title: "Loaned books",
     icon: <LayersIcon />,
   },
 ];
@@ -43,6 +46,7 @@ const demoTheme = extendTheme({
       xl: 1536,
     },
   },
+  style: { padding: 100 },
 });
 
 function useDemoRouter(initialPath) {
@@ -66,21 +70,22 @@ const Skeleton = styled("div")(({ theme, height }) => ({
   content: '""',
 }));
 
-const AppProviderHeader = () => {
-  const headerText = "Welcome to My App";
-};
+// const AppProviderHeader = () => {
+//   const headerText = "Welcome to My App";
+// };
 
 export default function UserDashBoard() {
   const [isOpen, setIsOpen] = useState(false);
-
-  const router = useDemoRouter("/hello");
+  const { user } = useContext(AuthContext);
+  const router = useDemoRouter("/Profile");
   const drawerWidth = "64px";
+
   return (
     <AppProvider
       branding={{
         logo: "",
         title: "Library Managment System",
-        homeUrl: "/user",
+        homeUrl: "/Profile",
       }}
       navigation={Menu}
       router={router}
@@ -92,10 +97,8 @@ export default function UserDashBoard() {
           <Grid size={5} />
           <Grid size={12}>
             {router.pathname === "/userBookTable" && <UserBooksTable />}
-            {router.pathname === "/hello" && <LandingPageUser />}
-            {router.pathname !== "books" && router.pathname !== "users" && (
-              <Skeleton height={14} />
-            )}
+            {router.pathname === "/Profile" && <Profile />}
+            {router.pathname === "/loaned" && <UserloanedTable />}
           </Grid>
         </Grid>
         {/* </PageContainer> */}

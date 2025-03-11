@@ -1,5 +1,5 @@
 import React from "react";
-import { AddUserForm } from "../components/Users/AddUserForm";
+import { AddUserForm } from "../components/users/AddUserForm";
 import { UsersTable } from "../components/Users/UsersTable";
 import { useState, useEffect } from "react";
 
@@ -27,6 +27,11 @@ export const Users = () => {
   }, [users]);
 
   const addUser = async (data) => {
+    // let data = {
+    //   email: formFields.email,
+    //   password: formFields.password,
+    // };
+
     try {
       const response = await fetch(`${baseURL}/user`, {
         method: "POST",
@@ -43,7 +48,7 @@ export const Users = () => {
       }
       const result = await response.json();
       alert(result.message);
-      fetchUsers();
+      // fetchUsers();
       setCleanForm(true);
     } catch (error) {
       console.log(error);
@@ -51,7 +56,7 @@ export const Users = () => {
   };
   const deleteUser = async (id, e) => {
     try {
-      const response = await fetch(`${baseURL}/books/${id}`, {
+      const response = await fetch(`${baseURL}/users/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
@@ -102,10 +107,9 @@ export const Users = () => {
         </section>
       )}
 
-      <h1>Users Managment</h1>
-      {/* <AddUserForm onSubmitUser={addUser} cleanForm={cleanForm} /> */}
+      <h1>Users Management</h1>
+      <AddUserForm onSubmitUser={addUser} cleanForm={cleanForm} />
       <UsersTable
-        onSubmitUser={addUser}
         users={users}
         onRowDelete={deleteUser}
         onUpdateUser={editUser}

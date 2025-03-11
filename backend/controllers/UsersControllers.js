@@ -1,10 +1,5 @@
-import mysql from "mysql2";
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "DataSQL",
-  database: "library_managment_system",
-});
+import bcrypt from "bcrypt";
+import { db } from "../server.js";
 
 export async function getUsers(req, res) {
   if (req.query.sort) {
@@ -40,20 +35,23 @@ export async function getUsers(req, res) {
       }
     );
   } else {
-    db.query("SELECT * FROM users", (error, result, fields) => {
+    db.query("SELECT * FROM users ORDER BY name", (error, result, fields) => {
       res.status(200).json(result);
     });
   }
 }
 
 export async function getUsersToLoan(req, res) {
-  db.query("SELECT user_id, name FROM users", (error, result, fields) => {
-    if (error) {
-      res.status(404).json({ message: error.sqlMessage });
-    } else {
-      res.status(200).json(result);
+  db.query(
+    "SELECT user_id, name FROM users ORDER BY name",
+    (error, result, fields) => {
+      if (error) {
+        res.status(404).json({ message: error.sqlMessage });
+      } else {
+        res.status(200).json(result);
+      }
     }
-  });
+  );
 }
 
 export async function getUsersInfo(req, res) {
@@ -61,55 +59,84 @@ export async function getUsersInfo(req, res) {
   db.query(
     `SELECT * FROM users WHERE user_id=${idToShow} `,
     (error, result, fields) => {
-      res.status(200).json(result[0]);
-      // console.log(result[0]); //this will return the first element of the array
-      res.status(200).json(result);
-      console.log(result);
+      if (error) {
+        res.status(400).json(error);
+      } else if (result) {
+        res.status(200).json(result[0]);
+        //this will return the first element of the array
+      }
     }
   );
 }
 
 export async function deleteUser(req, res) {
   let idToDelete = Number(req.params.id);
-  console.log(idToDelete);
-
-  // validation
-  if (typeof idToDelete !== "number") {
-    res.status(404).json({ message: "book not found" });
-  } else {
-    // parametrized queries
+  db.beginTransaction((err) => {
     db.query(
       "DELETE  FROM users WHERE user_id = ?",
       [idToDelete],
       (error, result, fields) => {
-        res.status(200).json({ message: "user deleted" });
+        if (error) {
+          return db.rollback(() => {
+            res.status(500).json({ error: "User Deletion failed" });
+          });
+        }
+        db.query(
+          "DELETE FROM loans where user_id=?",
+          [idToDelete],
+          (err, result) => {
+            if (err || result.affectedRows === 0) {
+              return db.rollback(() => {
+                res.status(400).json({ error: "User Deletion failed" });
+              });
+            }
+
+            // Commit transaction if both queries succeed
+            db.commit((err) => {
+              if (err) {
+                return db.rollback(() => {
+                  res.status(500).json({ error: "loan commit failed" });
+                });
+              }
+
+              res.status(201).json({
+                message: "Deletion successfull",
+              });
+            });
+          }
+        );
+      }
+    );
+  });
+}
+
+export async function addUser(req, res) {
+  const { name, email, password, role } = req.body;
+  const data = { ...req.body, password: await bcrypt.hash(password, 10) };
+  if (!name || !email || !password || !role) {
+    // console.log("All fields are required");
+    return;
+  } else {
+    db.query(
+      "INSERT INTO users (name, email, password, role) VALUES (?,?, ?, ? )",
+      [data.name, data.email, data.password, data.role],
+
+      (error, result, field) => {
+        if (error) {
+          res.status(404).json({ message: error.sqlMessage });
+        } else {
+          res.status(201).json({ message: "User inserted" });
+        }
       }
     );
   }
 }
 
-export async function addUser(req, res) {
-  const reqBody = req.body;
-
-  db.query(
-    "INSERT INTO users (name, email, password, role) VALUES (?,?, ?, ? )",
-    [reqBody.name, reqBody.email, reqBody.password, reqBody.role],
-
-    (error, result, field) => {
-      if (error) {
-        res.status(404).json({ message: error.sqlMessage });
-      } else {
-        res.status(201).json({ message: "User inserted" });
-      }
-    }
-  );
-}
-
 export async function updateUser(req, res) {
   try {
-    let books = Number(req.params.id);
+    let userId = Number(req.params.id);
     db.query(
-      `UPDATE users SET name=?, email=?, password=?, role=? WHERE user_id=${books};`,
+      `UPDATE users SET name=?, email=?, password=?, role=? WHERE user_id=${userId};`,
       [req.body.name, req.body.email, req.body.password, req.body.role],
       (err, student) => {
         res.json({ message: "User has been updated" });
@@ -123,29 +150,29 @@ export async function updateUser(req, res) {
   }
 }
 
-// export async function validateStudent(req, res) {
-//   try {
-//     let { email, password } = req.body;
+export async function login(req, res) {
+  let { email, password } = req.body;
 
-//     const student = await Student.findOne({
-//       where: {
-//         email: email, //the first is the value FROM the DB
-//       },
-//     });
-
-//     if (student.email === null) {
-//       res.status(404).json({ error: "wrong credincial" });
-//     } else {
-//       //check the password
-//       const match = await bcrypt.compare(password, student.password);
-//       if (!match) {
-//         res.status(401).json({ error: "wrong credincial" });
-//       } else {
-//         res.status(200).json({ message: "OK" });
-//       }
-//     }
-//   } catch (error) {
-//     console.log(`Error: ${error}`);
-//     res.status(404).json({ error: error });
-//   }
-// }
+  db.query(
+    "SELECT * FROM users WHERE email= ?",
+    [email],
+    async (error, result) => {
+      if (error) {
+        // display error
+        res.status(500).json({ error: error });
+      } else if (result) {
+        if (result.length === 0) {
+          res.status(200).json({ found: false });
+        } else {
+          const userPassword = result[0].password;
+          const match = await bcrypt.compare(password, userPassword);
+          if (!match) {
+            res.status(200).json({ found: false });
+          } else {
+            res.status(200).json({ found: true, data: result[0] });
+          }
+        }
+      }
+    }
+  );
+}

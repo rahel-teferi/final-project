@@ -22,7 +22,7 @@ import { useState, useEffect } from "react";
 import { UpdateUser } from "./UpdateUser";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import { AddUserForm } from "./AddUserForm";
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -112,12 +112,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export const UsersTable = ({
-  users,
-  onRowDelete,
-  onUpdateUser,
-  onSubmitUser,
-}) => {
+export const UsersTable = ({ users, onRowDelete, onUpdateUser }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -136,9 +131,6 @@ export const UsersTable = ({
 
   return (
     <div>
-      <div>
-        <AddUserForm onSubmitUser={onSubmitUser} />
-      </div>
       <TableContainer>
         <Table sx={{ maxWidth: 800 }} aria-label="custom pagination table">
           <TableHead>

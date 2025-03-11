@@ -2,16 +2,30 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
+export const AddBookForm = ({ onSubmitBook, cleanForm }) => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const [formFields, setFormFields] = useState({
     title: "",
     author: "",
     genre: "",
     description: "",
-    status: "",
+    status: "available",
   });
+  useEffect(() => {
+    if (cleanForm) {
+      setFormFields({
+        title: "",
+        author: "",
+        genre: "",
+        description: "",
+        status: "available",
+      });
+    }
+  }, [cleanForm]);
   const style = {
     position: "absolute",
     top: "50%",
@@ -23,9 +37,6 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
     boxShadow: 24,
     p: 4,
   };
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -33,7 +44,8 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
     setFormFields({ ...formFields, [name]: value });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     let newBook = {
       title: formFields.title,
       author: formFields.author,
@@ -41,12 +53,13 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
       description: formFields.description,
       status: formFields.status,
     };
+    handleClose();
     onSubmitBook(newBook);
-    console.log("success");
+    // cleanForm(true);
   };
 
   return (
-    <div>
+    <>
       <Button onClick={handleOpen}>Add a book</Button>
       <Modal
         open={open}
@@ -56,10 +69,10 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
       >
         <Box sx={style}>
           <div id="modal-modal-title" variant="h6" component="h2">
-            Add
+            New book
           </div>
           <div id="modal-modal-description" sx={{ mt: 2 }}>
-            <form onSubmit={handleSubmit} action="/books">
+            <form onSubmit={handleSubmit}>
               <p style={{ position: "relative", width: "250px" }}>
                 <label>
                   Book title
@@ -74,6 +87,7 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
                     name="title"
                     value={formFields.title}
                     onChange={handleChange}
+                    required
                   />
                 </label>
               </p>
@@ -133,7 +147,7 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
                   Status
                   <select
                     style={{
-                      width: "100%",
+                      width: "250px",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
@@ -142,18 +156,40 @@ export const AddBookForm = ({ onSubmitBook, cleanForm, data }) => {
                     name="status"
                     onChange={handleChange}
                   >
-                    <option value="Available">Available</option>
-                    <option value="Loaned">Loaned</option>
+                    <option
+                      style={{
+                        color: "black",
+                        padding: "8px",
+                        cursor: "pointer",
+                        borderBottom: "1px solid #eee",
+                      }}
+                      value="available"
+                    >
+                      Available
+                    </option>
+                    <option
+                      style={{
+                        color: "black",
+                        padding: "8px",
+                        cursor: "pointer",
+                        borderBottom: "1px solid #eee",
+                      }}
+                      value="loaned"
+                    >
+                      Loaned
+                    </option>
                   </select>
                 </label>
               </p>
               <p style={{ position: "relative", width: "250px" }}>
-                <button type="submit">Add Book</button>
+                <Button variant="contained" type="submit">
+                  Add
+                </Button>
               </p>
             </form>
           </div>
         </Box>
       </Modal>
-    </div>
+    </>
   );
 };

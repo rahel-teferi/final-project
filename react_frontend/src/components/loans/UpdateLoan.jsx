@@ -2,39 +2,40 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export const UpdateLoan = ({ data, onUpdateLoan }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [values, setValues] = useState({
+  const [formFields, setFormFields] = useState({
+    loan_id: data.loan_id,
+    user_id: data.user_id,
     book_id: data.book_id,
-    title: data.title,
-    author: data.author,
-    genre: data.genre,
-    description: data.description,
-    status: data.status,
+    loan_date: data.loan_date,
+    return_date: data.return_date,
+    is_returned: data.is_returned,
   });
 
   const handleChange = (e) => {
     e.preventDefault();
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
+    setFormFields({ ...formFields, [name]: value });
   };
 
   const handleEdit = async (e) => {
     e.preventDefault();
-    let updatedBook = {
-      title: values.title,
-      author: values.author,
-      genre: values.genre,
-      description: values.description,
-      status: values.status,
+    let updatedLoan = {
+      loan_id: data.loan_id,
+      user_id: data.user_id,
+      book_id: data.book_id,
+      loan_date: data.loan_date,
+      return_date: formFields.return_date,
+      is_returned: formFields.is_returned,
     };
-    onUpdateBook(updatedBook, values.book_id);
+    handleClose();
+    onUpdateLoan(updatedLoan, data.loan_id);
   };
-
   const style = {
     position: "absolute",
     top: "50%",
@@ -59,67 +60,118 @@ export const UpdateLoan = ({ data, onUpdateLoan }) => {
         <Box sx={style}>
           <div id="modal-modal-description" sx={{ mt: 2 }}>
             <form onSubmit={handleEdit}>
-              <p>
+              <p style={{ position: "relative", width: "250px" }}>
                 <label>
-                  Book title
-                  <input
-                    type="text"
-                    name="title"
-                    value={values.title}
-                    onChange={handleChange}
-                  />
-                </label>
-              </p>
-              <p>
-                <label>
-                  Book author
-                  <input
-                    type="text"
-                    name="author"
-                    value={values.author}
-                    onChange={handleChange}
-                  />
-                </label>
-              </p>
-              <p>
-                <label>
-                  Book genre
-                  <input
-                    type="text"
-                    name="genre"
-                    value={values.genre}
-                    onChange={handleChange}
-                  />
-                </label>
-              </p>
-              <p>
-                <label>
-                  Description
-                  <input
-                    type="text"
-                    name="description"
-                    value={values.description}
-                    onChange={handleChange}
-                  />
-                </label>
-              </p>
-              <p>
-                <label>
-                  Status
+                  User
                   <select
-                    value={values.status}
-                    name="status"
+                    name="user_id"
                     onChange={handleChange}
+                    value={Number(data.user_id)}
+                    required
+                    placeholder="Search..."
+                    style={{
+                      width: "250px",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
+                    disabled
                   >
-                    <option value="Available">Available</option>
-                    <option value="Loaned">Loaned</option>
+                    <option key={data.user_id} value={data.user_id}>
+                      {data.user}
+                    </option>
                   </select>
                 </label>
               </p>
-
-              <p>
-                <button type="submit">Return</button>
+              <p style={{ position: "relative", width: "250px" }}>
+                <label>
+                  Book
+                  <select
+                    name="book_id"
+                    value={data.book_id}
+                    placeholder="Search..."
+                    style={{
+                      width: "250px",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
+                    disabled
+                  >
+                    <option key={data.book_id} value={data.book_id}>
+                      {data.book}
+                    </option>
+                  </select>
+                </label>
               </p>
+              <p style={{ position: "relative", width: "250px" }}>
+                <label>
+                  Loan date
+                  <input
+                    type="date"
+                    name="loan_date"
+                    value={data.loan_date}
+                    style={{
+                      width: "250px",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
+                    disabled
+                  />
+                </label>
+              </p>
+              <p style={{ position: "relative", width: "250px" }}>
+                <label>
+                  Return date
+                  <input
+                    type="date"
+                    name="return_date"
+                    value={formFields.return_date}
+                    onChange={handleChange}
+                    style={{
+                      width: "250px",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
+                  />
+                </label>
+              </p>
+              <p style={{ position: "relative", width: "250px" }}>
+                <label>
+                  Returned
+                  <select
+                    value={formFields.is_returned}
+                    name="is_returned"
+                    onChange={handleChange}
+                    style={{
+                      width: "250px",
+                      padding: "8px",
+                      borderRadius: "4px",
+                      border: "1px solid #ccc",
+                    }}
+                  >
+                    <option
+                      style={{
+                        color: "black",
+                        padding: "8px",
+                        cursor: "pointer",
+                        borderBottom: "1px solid #eee",
+                      }}
+                      value="No"
+                    >
+                      No
+                    </option>
+                    <option value="Yes">Yes</option>
+                  </select>
+                </label>
+              </p>
+              <div style={{ position: "relative", width: "250px" }}>
+                <Button variant="contained" type="submit">
+                  Update
+                </Button>
+              </div>
             </form>
           </div>
         </Box>

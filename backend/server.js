@@ -1,6 +1,7 @@
 import express from "express";
 import mysql from "mysql2";
 import cors from "cors";
+import bcrypt from "bcrypt";
 import * as BooksControllers from "./controllers/BooksControllers.js";
 import * as UsersControllers from "./controllers/UsersControllers.js";
 import * as LoansControllers from "./controllers/LoansControllers.js";
@@ -9,14 +10,15 @@ const app = express();
 app.use(express.static("public"));
 app.use(express.json());
 app.use(cors({ origin: "*" }));
-const db = mysql.createConnection({
+export const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "DataSQL",
+  database: "library_managment_system",
 });
 
 app.get("/books", BooksControllers.getBooks);
-app.get("/loans/books", BooksControllers.getBooksToLoan);
+app.get("/books/loans", BooksControllers.getBooksToLoan);
 app.get("/books/:id", BooksControllers.getBooksInfo);
 app.put("/books/:id", BooksControllers.updateBook);
 app.delete("/books/:id", BooksControllers.deleteStudent);
@@ -31,10 +33,12 @@ app.post("/user", UsersControllers.addUser);
 
 app.get("/loans", LoansControllers.getLoans);
 app.get("/loans/:id", LoansControllers.getLoanInfo);
-app.put("/loans/:id", LoansControllers.updateStatus);
-// app.put("/loans/book/:id", LoansControllers.updateBookStatus);
+app.put("/loans/:id", LoansControllers.updateLoan);
 app.delete("/loans/:id", LoansControllers.deleteLoan);
 app.post("/loans", LoansControllers.addLoan);
+app.get("/loans/users/:id", LoansControllers.getBooksLoaned);
+
+app.post("/login", UsersControllers.login);
 
 //error route
 app.use((req, res, next) => {
