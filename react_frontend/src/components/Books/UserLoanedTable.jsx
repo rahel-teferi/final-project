@@ -150,10 +150,10 @@ export const UserloanedTable = () => {
     setPage(0);
   };
   if (loanedBooks.length === 0) {
-    return <h3>No loaned books yet</h3>;
+    return <h3 style={{ padding: "20px" }}>No loaned books yet</h3>;
   } else {
     return (
-      <div>
+      <div style={{ padding: "20px" }}>
         <h1>List of loaned books</h1>
         <TableContainer component={Paper}>
           <Table sx={{ maxWidth: 1000 }} aria-label="custom pagination table">

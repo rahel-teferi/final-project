@@ -78,6 +78,7 @@ export default function LoginForm() {
       [name]: value,
     });
   };
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -131,27 +132,19 @@ export default function LoginForm() {
     }
   };
 
-  const validateInputs = () => {
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
+  const handleBlur = (e) => {
+    const emailValidation = /\S+@\S+\.\S+/;
 
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage("Please enter a valid email address.");
-      isValid = false;
-    } else {
+    if (emailValidation.test(e.target.value) || e.target.value == "") {
       setEmailError(false);
-      setEmailErrorMessage("");
+    } else {
+      console.log("error");
+      setEmailError(true);
     }
-
-    return isValid;
   };
-
   return (
     <>
-      <SignInContainer direction="column" justifyContent="center">
+      <SignInContainer height="90vh" margin="auto" maxWidth="500px">
         <Card variant="outlined">
           <Box sx={{ display: { xs: "flex", md: "none" } }}></Box>
           <Typography
@@ -169,12 +162,12 @@ export default function LoginForm() {
               display: "flex",
               flexDirection: "column",
               width: "100%",
-              gap: 2,
+              gap: 5,
             }}
           >
             <div id="modal-modal-description" sx={{ mt: 2 }}>
-              <FormControl>
-                <label htmlFor="email">Email</label>
+              <FormControl style={{ marginBottom: "30px", width: "350px" }}>
+                <FormLabel htmlFor="email">Email</FormLabel>
                 <TextField
                   id="email"
                   type="email"
@@ -184,12 +177,21 @@ export default function LoginForm() {
                   autoFocus
                   required
                   variant="outlined"
-                  value={formFields.email}
                   onChange={handleChange}
-                  color={emailError ? "error" : "primary"}
+                  onBlur={handleBlur}
+                  style={{}}
                 />
-
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                {emailError && (
+                  <p style={{ color: "red" }}>Wronge email format</p>
+                )}
+              </FormControl>
+              <FormControl style={{ marginBottom: "30px", width: "350px" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                  }}
+                >
                   <FormLabel htmlFor="password">Password</FormLabel>
                   <Link
                     component="button"
@@ -213,13 +215,13 @@ export default function LoginForm() {
                   value={formFields.password}
                   onChange={handleChange}
                 />
-                {error && <p>{error}</p>}
+                {error && <p style={{ color: "red" }}>{error}</p>}
                 <Button
+                  style={{ marginTop: "30px" }}
                   value="Login"
                   type="submit"
                   fullWidth
                   variant="contained"
-                  onClick={validateInputs}
                 >
                   Login
                 </Button>

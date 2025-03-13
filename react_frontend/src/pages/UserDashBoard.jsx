@@ -4,13 +4,12 @@ import PeopleIcon from "@mui/icons-material/Dashboard";
 import LayersIcon from "@mui/icons-material/Layers";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
-import { PageContainer } from "@toolpad/core/PageContainer";
-import Grid from "@mui/material/Grid2";
 import { useState, useMemo, useContext } from "react";
 import { Profile } from "../components/dashBoard/Profile";
 import { UserBooksTable } from "../components/books/UserBooksTable";
 import { UserloanedTable } from "../components/books/UserLoanedTable";
 import AuthContext from "../components/core/AuthContext.jsx";
+import { UserBooks } from "./UserBooks.jsx";
 
 const Menu = [
   {
@@ -18,7 +17,7 @@ const Menu = [
     title: "Main items",
   },
   {
-    segment: "userBookTable",
+    segment: "userBooks",
     title: "Books list",
     icon: <PeopleIcon />,
   },
@@ -63,17 +62,6 @@ function useDemoRouter(initialPath) {
   return router;
 }
 
-const Skeleton = styled("div")(({ theme, height }) => ({
-  backgroundColor: theme.palette.action.hover,
-  borderRadius: theme.shape.borderRadius,
-  height,
-  content: '""',
-}));
-
-// const AppProviderHeader = () => {
-//   const headerText = "Welcome to My App";
-// };
-
 export default function UserDashBoard() {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useContext(AuthContext);
@@ -84,24 +72,17 @@ export default function UserDashBoard() {
     <AppProvider
       branding={{
         logo: "",
-        title: "Library Managment System",
+        title: "Members dashboard",
         homeUrl: "/Profile",
       }}
       navigation={Menu}
       router={router}
       theme={demoTheme}
     >
-      <DashboardLayout>
-        {/* <PageContainer> */}
-        <Grid container spacing={2}>
-          <Grid size={5} />
-          <Grid size={12}>
-            {router.pathname === "/userBookTable" && <UserBooksTable />}
-            {router.pathname === "/Profile" && <Profile />}
-            {router.pathname === "/loaned" && <UserloanedTable />}
-          </Grid>
-        </Grid>
-        {/* </PageContainer> */}
+      <DashboardLayout style>
+        {router.pathname === "/userBooks" && <UserBooks />}
+        {router.pathname === "/Profile" && <Profile />}
+        {router.pathname === "/loaned" && <UserloanedTable />}
       </DashboardLayout>
     </AppProvider>
   );

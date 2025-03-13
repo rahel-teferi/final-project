@@ -3,33 +3,28 @@ import { db } from "../server.js";
 export async function getBooks(req, res) {
   if (req.query.sort) {
     const fieldName = req.query.sort;
-    let sortingOrder = "ASC";
-    if (req.query.order) {
-      sortingOrder = req.query.order;
-      db.query(
-        `select * from books ORDER BY ${fieldName} ${sortingOrder}`,
-        (error, result, fields) => {
-          res.status(200).json(result);
-        }
-      );
-    }
-  } else if (req.query.title) {
-    let searchValue = req.query.title;
+    let order = "ASC";
+    // if (req.query.order) {
+    //   sortingOrder = req.query.order;
     db.query(
-      "SELECT * FROM books WHERE title=?",
-      [`${searchValue}`],
+      `select * from books ORDER BY ${fieldName} ${order}`,
       (error, result, fields) => {
-        console.log("searched");
+        if (error) {
+          res.status(400).json(error);
+        }
         res.status(200).json(result);
       }
     );
-  } else if (req.query.author) {
-    let searchValue = req.query.author;
+    // }
+  } else if (req.query.search) {
+    let searchValue = req.query.search;
     db.query(
-      "SELECT * FROM students WHERE author=?",
-      [`${searchValue}`],
+      `SELECT * FROM books WHERE title like '%${searchValue}%' OR author like '%${searchValue}%';`,
+      [],
       (error, result, fields) => {
-        console.log("searched");
+        if (error) {
+          throw new Error(error);
+        }
         res.status(200).json(result);
       }
     );
@@ -53,7 +48,7 @@ export const getBooksInfo = async (req, res) => {
   );
 };
 
-export async function deleteStudent(req, res) {
+export async function deleteBook(req, res) {
   let idToDelete = Number(req.params.id);
   db.beginTransaction((err) => {
     db.query(
@@ -66,10 +61,10 @@ export async function deleteStudent(req, res) {
           });
         }
         db.query(
-          "DELETE FROM loans where book_id=?",
+          "SELECT book_id FROM loans where book_id=?",
           [idToDelete],
           (err, result) => {
-            if (err || result.affectedRows === 0) {
+            if (result.length > 0) {
               return db.rollback(() => {
                 res.status(400).json({ error: "Book Deletion failed" });
               });

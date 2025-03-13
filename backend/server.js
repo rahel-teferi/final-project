@@ -21,7 +21,7 @@ app.get("/books", BooksControllers.getBooks);
 app.get("/books/loans", BooksControllers.getBooksToLoan);
 app.get("/books/:id", BooksControllers.getBooksInfo);
 app.put("/books/:id", BooksControllers.updateBook);
-app.delete("/books/:id", BooksControllers.deleteStudent);
+app.delete("/books/:id", BooksControllers.deleteBook);
 app.post("/books", BooksControllers.addBooks);
 
 app.get("/users", UsersControllers.getUsers);

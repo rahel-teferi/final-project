@@ -38,9 +38,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { UpdateBook } from "./UpdateBook";
-import { AddBookForm } from "./AddBookForm";
+import { BookInfo } from "./BookInfo";
+
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -62,7 +63,14 @@ function TablePaginationActions(props) {
   };
 
   return (
-    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+    <Box
+      sx={{
+        flexShrink: 0,
+        ml: 2.5,
+        marginRight: "200px",
+        alignItems: "center",
+      }}
+    >
       <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
@@ -110,7 +118,13 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export const BooksTable = ({ onUpdateBook, onRowDelete, books }) => {
+export const BooksTable = ({
+  onUpdateBook,
+  onRowDelete,
+  books,
+  onBookInfo,
+  book,
+}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -125,6 +139,10 @@ export const BooksTable = ({ onUpdateBook, onRowDelete, books }) => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+  const handleClick = (e, id) => {
+    console.log(id);
+    onBookInfo(id);
   };
 
   return (
@@ -151,7 +169,13 @@ export const BooksTable = ({ onUpdateBook, onRowDelete, books }) => {
                 )
               : books
             ).map((row) => (
-              <StyledTableRow key={row.book_id} sx={{ th: { border: 1000 } }}>
+              <StyledTableRow
+                key={row.book_id}
+                sx={{ th: { border: 1000 } }}
+                onClick={(e) => {
+                  handleClick(e, row.book_id);
+                }}
+              >
                 <StyledTableCell component="td" scope="row">
                   {row.book_id}
                 </StyledTableCell>
@@ -175,21 +199,28 @@ export const BooksTable = ({ onUpdateBook, onRowDelete, books }) => {
                     }}
                   >
                     Delete
-                  </button>
+                  </button>{" "}
                 </StyledTableCell>
               </StyledTableRow>
             ))}
+
             {emptyRows > 0 && (
               <StyledTableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
+                <TableCell colSpan={8} />
               </StyledTableRow>
             )}
           </TableBody>
           <TableFooter>
-            <TableRow>
+            <TableRow
+              style={{
+                height: "100%",
+                alignContent: "center",
+                justifyContent: "center",
+              }}
+            >
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={6}
+                colSpan={8}
                 count={books.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
@@ -209,6 +240,7 @@ export const BooksTable = ({ onUpdateBook, onRowDelete, books }) => {
           </TableFooter>
         </Table>
       </TableContainer>
+      <BookInfo book={book} />
     </>
   );
 };

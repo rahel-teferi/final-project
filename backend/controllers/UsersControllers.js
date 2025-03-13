@@ -24,13 +24,15 @@ export async function getUsers(req, res) {
         res.status(200).json(result);
       }
     );
-  } else if (req.query.name) {
-    let searchValue = req.query.name;
+  } else if (req.query.search) {
+    let searchValue = req.query.search;
     db.query(
-      "SELECT * FROM users WHERE name=?",
-      [`${searchValue}`],
+      `SELECT * FROM users WHERE name like '%${searchValue}%' OR email like '%${searchValue}%';`,
+      [],
       (error, result, fields) => {
-        console.log("searched");
+        if (error) {
+          throw new Error(error);
+        }
         res.status(200).json(result);
       }
     );
@@ -71,6 +73,7 @@ export async function getUsersInfo(req, res) {
 
 export async function deleteUser(req, res) {
   let idToDelete = Number(req.params.id);
+
   db.beginTransaction((err) => {
     db.query(
       "DELETE  FROM users WHERE user_id = ?",
@@ -82,12 +85,13 @@ export async function deleteUser(req, res) {
           });
         }
         db.query(
-          "DELETE FROM loans where user_id=?",
+          "SELECT user_id FROM loans where user_id=?",
           [idToDelete],
           (err, result) => {
-            if (err || result.affectedRows === 0) {
+            console.log(result);
+            if (result.length > 0) {
               return db.rollback(() => {
-                res.status(400).json({ error: "User Deletion failed" });
+                res.status(400).json({ error: "User can not be deleted" });
               });
             }
 

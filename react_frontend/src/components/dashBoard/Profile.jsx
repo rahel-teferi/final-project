@@ -32,7 +32,7 @@ export const Profile = () => {
     }
   }, []);
   return (
-    <>
+    <div style={{ padding: "20px" }}>
       {/* <h1>Welcome {member.name}</h1> */}
       <h4>Personal information</h4>
       {member && (
@@ -49,6 +49,6 @@ export const Profile = () => {
           </p>
         </section>
       )}
-    </>
+    </div>
   );
 };

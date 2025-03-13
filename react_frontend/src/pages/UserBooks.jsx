@@ -1,12 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { BooksTable } from "../components/books/BooksTable";
-import { AddBookForm } from "../components/books/AddBookForm";
+
 import { BookSearch } from "../components/books/BookSearch";
 import { BookInfo } from "../components/books/BookInfo";
+import { UserBooksTable } from "../components/books/UserBooksTable";
 
-export const Books = () => {
+export const UserBooks = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [books, setBooks] = useState([]);
   const [cleanForm, setCleanForm] = useState(false);
@@ -29,73 +29,6 @@ export const Books = () => {
   useEffect(() => {
     fetchBooks(books);
   }, []);
-
-  const addBook = async (data) => {
-    try {
-      const response = await fetch(`${baseURL}/books`, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json;charset=utf-8" },
-      });
-      console.log(response);
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error(error);
-        } else {
-          throw new Error("db problem");
-        }
-      }
-      const result = await response.json();
-      alert(result.message);
-      await fetchBooks();
-      setCleanForm(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const onUpdateBook = async (data, id) => {
-    console.log(data);
-    console.log(typeof id);
-    try {
-      const response = await fetch(`${baseURL}/books/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json;charset=utf-8" },
-      });
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error(error);
-        } else {
-          throw new Error("db problem");
-        }
-      }
-      const result = await response.json();
-      alert(result.message);
-      fetchBooks();
-      setCleanForm(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const deleteBook = async (id, e) => {
-    try {
-      const response = await fetch(`${baseURL}/books/${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error(
-          "This Book can not be deleted because it has entries in other tables"
-        );
-      }
-      const result = await response.json();
-      alert(result.message);
-      fetchBooks();
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const searchBook = async (searchValue) => {
     try {
@@ -147,7 +80,7 @@ export const Books = () => {
   };
 
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
       {isLoading && (
         <section className="loader">
           <div className="lds-ring">
@@ -158,15 +91,13 @@ export const Books = () => {
           </div>
         </section>
       )}
-      <h1>Books Managment</h1>
-      <AddBookForm onSubmitBook={addBook} cleanForm={cleanForm} />
+      <h1>List of books</h1>
+
       <p>
         <BookSearch onSearch={searchBook} />
       </p>
       {books.length !== 0 ? (
-        <BooksTable
-          onUpdateBook={onUpdateBook}
-          onRowDelete={deleteBook}
+        <UserBooksTable
           books={books}
           book={book}
           onBookInfo={getBookInfo}

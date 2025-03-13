@@ -2,6 +2,7 @@ import React from "react";
 import { AddUserForm } from "../components/users/AddUserForm";
 import { UsersTable } from "../components/Users/UsersTable";
 import { useState, useEffect } from "react";
+import { UserSearch } from "../components/users/UserSearch";
 
 export const Users = () => {
   const [users, setUsers] = useState([]);
@@ -24,7 +25,7 @@ export const Users = () => {
 
   useEffect(() => {
     fetchUsers(users);
-  }, [users]);
+  }, []);
 
   const addUser = async (data) => {
     // let data = {
@@ -48,7 +49,7 @@ export const Users = () => {
       }
       const result = await response.json();
       alert(result.message);
-      // fetchUsers();
+      fetchUsers();
       setCleanForm(true);
     } catch (error) {
       console.log(error);
@@ -60,7 +61,10 @@ export const Users = () => {
         method: "DELETE",
       });
       if (!response.ok) {
-        throw new Error("not found");
+        alert(
+          "This user can not be deleted because it has entries in another table"
+        );
+        throw new Error(error);
       }
       const result = await response.json();
       alert(result.message);
@@ -94,6 +98,18 @@ export const Users = () => {
       console.log(error);
     }
   };
+  const searchUser = async (searchValue) => {
+    try {
+      const response = await fetch(`${baseURL}/loans?search=${searchValue}`);
+      if (!response.ok) {
+        throw new Error("not found");
+      }
+      const result = await response.json();
+      setUsers(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       {isLoading && (
@@ -109,6 +125,9 @@ export const Users = () => {
 
       <h1>Users Management</h1>
       <AddUserForm onSubmitUser={addUser} cleanForm={cleanForm} />
+      <p>
+        <UserSearch onSearch={searchUser} />
+      </p>
       <UsersTable
         users={users}
         onRowDelete={deleteUser}

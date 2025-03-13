@@ -13,23 +13,18 @@ export async function getLoans(req, res) {
         }
       );
     }
-  } else if (req.query.title) {
-    let searchValue = req.query.title;
+  } else if (req.query.search) {
+    let searchValue = req.query.search;
     db.query(
-      "SELECT * FROM loans WHERE title=?",
-      [`${searchValue}`],
+      `SELECT loans.*, users.name AS user, books.title AS book 
+      FROM loans 
+      JOIN users USING(user_id) 
+      JOIN books USING(book_id) WHERE books.title like '%${searchValue}%' OR users.name like '%${searchValue}%';`,
+      [],
       (error, result, fields) => {
-        console.log("searched");
-        res.status(200).json(result);
-      }
-    );
-  } else if (req.query.name) {
-    let searchValue = req.query.name;
-    db.query(
-      "SELECT * FROM loans WHERE name=?",
-      [`${searchValue}`],
-      (error, result, fields) => {
-        console.log("searched");
+        if (error) {
+          throw new Error(error);
+        }
         res.status(200).json(result);
       }
     );

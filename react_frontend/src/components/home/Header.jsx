@@ -8,16 +8,33 @@ import AuthContext from "../core/AuthContext";
 import { useContext } from "react";
 
 export const Header = () => {
-  const { isLogged } = useContext(AuthContext);
+  const { isLogged, user } = useContext(AuthContext);
   return (
-    <Navbar expand="lg" className="bg-body-primary">
-      <Container fluid className="bg-primary">
-        <Navbar.Brand href="#">Library management system</Navbar.Brand>
+    <Navbar
+      expand="lg"
+      style={{
+        minWidth: "500px",
+        height: "75px",
+        maxWidth: "1200px",
+        margin: "auto",
+      }}
+    >
+      <Container fluid>
+        <Navbar.Brand
+          href="#"
+          style={{
+            fontSize: "30px",
+            fontWeight: "bold",
+          }}
+          // className="text-primary "
+        >
+          Library management system
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll" style={{ justifyContent: "right" }}>
           {!isLogged && (
             <Nav
-              className="me-auto my-2 my-lg-0"
+              className="me-auto my-2 my-lg-0 "
               style={{
                 maxHeight: "100px",
                 display: "flex",
@@ -30,8 +47,8 @@ export const Header = () => {
               <Nav.Link href="/userbook" style={{ color: "black" }}>
                 Books
               </Nav.Link>
-              <Nav.Link href="students" style={{ color: "black" }}>
-                Students
+              <Nav.Link href="Contact" style={{ color: "black" }}>
+                Contact
               </Nav.Link>
             </Nav>
           )}
@@ -45,16 +62,21 @@ export const Header = () => {
           )}
 
           {isLogged && (
-            <Nav.Link
-              href="/"
-              style={{
-                color: "black",
-                alignItems: "right",
-                marginRight: "50px",
-              }}
-            >
-              Logout
-            </Nav.Link>
+            <>
+              <h5 style={{ margin: "5px 100px 0 0", alignItems: "center" }}>
+                Hello {user.name}
+              </h5>
+              <Nav.Link
+                href="/"
+                style={{
+                  color: "black",
+                  alignItems: "right",
+                  marginRight: "50px",
+                }}
+              >
+                <h5> Logout</h5>
+              </Nav.Link>
+            </>
           )}
         </Navbar.Collapse>
       </Container>

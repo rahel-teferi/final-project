@@ -20,6 +20,7 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import { useState, useEffect } from "react";
+import { BookSearch } from "./BookSearch";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -62,7 +63,14 @@ function TablePaginationActions(props) {
   };
 
   return (
-    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+    <Box
+      sx={{
+        flexShrink: 0,
+        ml: 2.5,
+        marginRight: "200px",
+        alignItems: "center",
+      }}
+    >
       <IconButton
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
@@ -93,6 +101,12 @@ function TablePaginationActions(props) {
         )}
       </IconButton>
       <IconButton
+        sx={{
+          flexShrink: 0,
+          ml: 2.5,
+
+          alignItems: "center",
+        }}
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
@@ -110,27 +124,9 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export const UserBooksTable = () => {
-  const [books, setBooks] = useState([]);
+export const UserBooksTable = ({ books, onBookInfo, book }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const baseURL = "http://localhost:3000";
-  const fetchBooks = async () => {
-    try {
-      const response = await fetch(`${baseURL}/books`);
-      if (!response.ok) {
-        throw error("not found");
-      }
-      const result = await response.json();
-      setBooks(result);
-    } catch (error) {
-      console.log("error");
-    }
-  };
-
-  useEffect(() => {
-    fetchBooks(books);
-  }, [books]);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -144,75 +140,76 @@ export const UserBooksTable = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
+  const handleClick = (e, id) => {
+    console.log(id);
+    onBookInfo(id);
+  };
   return (
-    <div>
-      <h1>List of books</h1>
-      <TableContainer component={Paper}>
-        <Table sx={{ maxWidth: 1000 }} aria-label="custom pagination table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Book id</StyledTableCell>
-              <StyledTableCell align="left">Title</StyledTableCell>
-              <StyledTableCell align="left">Author</StyledTableCell>
-              <StyledTableCell align="left">Genre</StyledTableCell>
-              <StyledTableCell align="left">description</StyledTableCell>
-              <StyledTableCell align="left">Staus</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? books.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : books
-            ).map((row) => (
-              <StyledTableRow key={row.book_id} sx={{ th: { border: 1000 } }}>
-                <StyledTableCell component="td" scope="row">
-                  {row.book_id}
-                </StyledTableCell>
-                <StyledTableCell align="left" scope="row">
-                  {row.title}
-                </StyledTableCell>
-                <StyledTableCell align="left">{row.author}</StyledTableCell>
-                <StyledTableCell align="left">{row.genre}</StyledTableCell>
-                <StyledTableCell align="left">
-                  {row.description}
-                </StyledTableCell>
-                <StyledTableCell align="left">{row.status}</StyledTableCell>
-              </StyledTableRow>
-            ))}
-            {emptyRows > 0 && (
-              <StyledTableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={6} />
-              </StyledTableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={3}
-                count={books.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                slotProps={{
-                  select: {
-                    inputProps: {
-                      "aria-label": "rows per page",
-                    },
-                    native: true,
+    <TableContainer>
+      <Table sx={{ maxWidth: 1200 }} aria-label="custom pagination table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>Book id</StyledTableCell>
+            <StyledTableCell align="left">Title</StyledTableCell>
+            <StyledTableCell align="left">Author</StyledTableCell>
+            <StyledTableCell align="left">Genre</StyledTableCell>
+            <StyledTableCell align="left">description</StyledTableCell>
+            <StyledTableCell align="left">Staus</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {(rowsPerPage > 0
+            ? books.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : books
+          ).map((row) => (
+            <StyledTableRow
+              key="row.book_id"
+              onClick={(e) => {
+                handleClick(e, row.book_id);
+              }}
+            >
+              <StyledTableCell component="td" scope="row">
+                {row.book_id}
+              </StyledTableCell>
+              <StyledTableCell align="left" scope="row">
+                {row.title}
+              </StyledTableCell>
+              <StyledTableCell align="left">{row.author}</StyledTableCell>
+              <StyledTableCell align="left">{row.genre}</StyledTableCell>
+              <StyledTableCell align="left">{row.description}</StyledTableCell>
+              <StyledTableCell align="left">{row.status}</StyledTableCell>
+            </StyledTableRow>
+          ))}
+          {emptyRows > 0 && (
+            <StyledTableRow style={{ height: 53 * emptyRows }}>
+              <TableCell colSpan={6} />
+            </StyledTableRow>
+          )}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TablePagination
+              style={{ alignSelf: "left" }}
+              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+              colSpan={6}
+              count={books.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              slotProps={{
+                select: {
+                  inputProps: {
+                    "aria-label": "rows per page",
                   },
-                }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-    </div>
+                  native: true,
+                },
+              }}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </TableContainer>
   );
 };

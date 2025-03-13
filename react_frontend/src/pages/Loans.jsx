@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { LoanTabel } from "../components/Loans/LoanTabel.jsx";
 import { LoanForm } from "../components/loans/LoanForm.jsx";
+import { LoanSearch } from "../components/loans/LoanSearch.jsx";
 
 export const Loans = () => {
   const [loans, setLoans] = useState([]);
@@ -27,6 +28,7 @@ export const Loans = () => {
       const result = await response.json();
 
       alert(result.message);
+      fetchLoans();
     } catch (error) {
       console.log(error);
     }
@@ -74,11 +76,25 @@ export const Loans = () => {
   useEffect(() => {
     fetchLoans();
   }, []);
+  const searchLoan = async (searchValue) => {
+    try {
+      const response = await fetch(`${baseURL}/loans?search=${searchValue}`);
+      if (!response.ok) {
+        throw new Error("not found");
+      }
+      const result = await response.json();
+      setLoans(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       <h1>Loan/ Return Managment</h1>
       <LoanForm onSubmitLoan={addLoan} />
-
+      <p>
+        <LoanSearch onSearch={searchLoan} />
+      </p>
       <LoanTabel loans={loans} onUpdateLoan={updateLoan} />
     </div>
   );

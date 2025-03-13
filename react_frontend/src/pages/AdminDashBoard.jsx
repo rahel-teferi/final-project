@@ -96,13 +96,6 @@ function useDemoRouter(initialPath) {
   return router;
 }
 
-const Skeleton = styled("div")(({ theme, height }) => ({
-  backgroundColor: theme.palette.action.hover,
-  borderRadius: theme.shape.borderRadius,
-  height,
-  content: '""',
-}));
-
 export default function AdminDashBoard() {
   const router = useDemoRouter("/Profile");
 
@@ -110,9 +103,8 @@ export default function AdminDashBoard() {
     <AppProvider
       branding={{
         logo: "",
-        title: "Library Managment System",
+        title: "Administrator dashboard",
         homeUrl: "/Profile",
-        style: { marginLeft: "100px" },
       }}
       navigation={Menu}
       router={router}
@@ -120,15 +112,10 @@ export default function AdminDashBoard() {
     >
       <DashboardLayout>
         <PageContainer title={""} breadcrumbs={[]}>
-          <Grid container spacing={2}>
-            <Grid size={3} />
-            <Grid size={12}>
-              {router.pathname === "/books" && <Books />}
-              {router.pathname === "/users" && <Users />}
-              {router.pathname === "/loans" && <Loans />}
-              {router.pathname === "/Profile" && <Profile />}
-            </Grid>
-          </Grid>
+          {router.pathname === "/books" && <Books />}
+          {router.pathname === "/users" && <Users />}
+          {router.pathname === "/loans" && <Loans />}
+          {router.pathname === "/Profile" && <Profile />}
         </PageContainer>
       </DashboardLayout>
     </AppProvider>
