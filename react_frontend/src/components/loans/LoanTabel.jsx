@@ -23,7 +23,7 @@ import { UpdateLoan } from "./UpdateLoan";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
@@ -127,9 +127,9 @@ export const LoanTabel = ({ loans, onUpdateLoan }) => {
   };
 
   return (
-    <div>
-      <TableContainer component={Paper}>
-        <Table sx={{ maxWidth: 1200 }} aria-label="custom pagination table">
+    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+      <TableContainer sx={{ maxHeight: 1100, padding: "10px 50px" }}>
+        <Table aria-label="custom pagination table">
           <TableHead>
             <TableRow>
               <StyledTableCell>Loan ID</StyledTableCell>
@@ -201,6 +201,6 @@ export const LoanTabel = ({ loans, onUpdateLoan }) => {
           </TableFooter>
         </Table>
       </TableContainer>
-    </div>
+    </Paper>
   );
 };

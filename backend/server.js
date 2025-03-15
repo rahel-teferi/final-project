@@ -1,7 +1,7 @@
 import express from "express";
 import mysql from "mysql2";
 import cors from "cors";
-import bcrypt from "bcrypt";
+
 import * as BooksControllers from "./controllers/BooksControllers.js";
 import * as UsersControllers from "./controllers/UsersControllers.js";
 import * as LoansControllers from "./controllers/LoansControllers.js";
@@ -37,6 +37,7 @@ app.put("/loans/:id", LoansControllers.updateLoan);
 app.delete("/loans/:id", LoansControllers.deleteLoan);
 app.post("/loans", LoansControllers.addLoan);
 app.get("/loans/users/:id", LoansControllers.getBooksLoaned);
+app.get("/loans/extend/:id", LoansControllers.extendLoan);
 
 app.post("/login", UsersControllers.login);
 

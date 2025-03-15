@@ -13,6 +13,10 @@ export const Books = () => {
   const [book, setBook] = useState([]);
   const baseURL = "http://localhost:3000";
 
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const fetchBooks = async () => {
     try {
       const response = await fetch(`${baseURL}/books`);
@@ -111,41 +115,40 @@ export const Books = () => {
     }
   };
 
-  // const sortByTitle = async (sortingColumn, order) => {
-  //   if (order === "ASC") {
-  //     order = "DESC";
-  //   } else if (order === "desc") {
-  //     order = "ASC";
-  //   }
-  //   try {
-  //     const response = await fetch(
-  //       `${baseURL}/books?sort=${sortingColumn} ${order}`
-  //     );
-  //     console.log(response);
-  //     if (!response.ok) {
-  //       throw new Error("not found");
-  //     }
-  //     const data = await response.json();
-  //     setBooks(data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const getBookInfo = async (id) => {
     try {
       const response = await fetch(`${baseURL}/books/${id}`);
-      console.log(response);
+
       if (!response.ok) {
         throw new Error("not found");
       }
       const data = await response.json();
       setBook(data[0]);
-      console.log(data);
+      handleOpen();
     } catch (error) {
       console.log(error);
     }
   };
-
+  const sortBook = async (sortingColumn, order) => {
+    if (order == "asc") {
+      order = "desc";
+    } else if (order == "desc") {
+      order = "ASC";
+    }
+    try {
+      const response = await fetch(
+        `${baseURL}/books?sort=${sortingColumn}&order=${order}`
+      );
+      console.log(response);
+      if (!response.ok) {
+        throw new Error("not found");
+      }
+      const data = await response.json();
+      setBooks(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       {isLoading && (
@@ -158,9 +161,11 @@ export const Books = () => {
           </div>
         </section>
       )}
-      <h1>Books Managment</h1>
-      <AddBookForm onSubmitBook={addBook} cleanForm={cleanForm} />
-      <p>
+      <h1 style={{ padding: "0 50px" }}>Books Managment</h1>
+      <p style={{ padding: "0 50px" }}>
+        <AddBookForm onSubmitBook={addBook} cleanForm={cleanForm} />
+      </p>
+      <p style={{ padding: "0 50px" }}>
         <BookSearch onSearch={searchBook} />
       </p>
       {books.length !== 0 ? (
@@ -168,14 +173,14 @@ export const Books = () => {
           onUpdateBook={onUpdateBook}
           onRowDelete={deleteBook}
           books={books}
-          book={book}
+          // book={book}
           onBookInfo={getBookInfo}
-          // onSorting={sortByTitle}
+          onSorting={sortBook}
         />
       ) : (
         <p>There are no Books</p>
       )}
-      <BookInfo book={book} />
+      <BookInfo book={book} open={open} setOpen={setOpen} />
     </div>
   );
 };

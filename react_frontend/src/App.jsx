@@ -2,22 +2,19 @@ import "./App.css";
 
 import AdminDashBoard from "./pages/AdminDashBoard";
 import { Books } from "./pages/Books.jsx";
-
 import { Route, Routes } from "react-router-dom";
 import { Users } from "./pages/Users.jsx";
 import { Loans } from "./pages/Loans.jsx";
 import UserDashBoard from "./pages/UserDashBoard.jsx";
 import { Profile } from "./components/dashBoard/Profile.jsx";
 import { UserBooks } from "./pages/UserBooks.jsx";
-// import ProtectedRoute from "./components/ProtectedRoute";
 import AuthContext from "./components/core/AuthContext";
 import { useContext } from "react";
-import { Login } from "./pages/Login.jsx";
 import { UserloanedTable } from "./components/books/UserLoanedTable.jsx";
 import LoginForm from "./components/LoginForm.jsx";
 import HomePage from "./components/home/HomePage.jsx";
 import ProtectedRoute from "./components/core/ProtectedRoute.jsx";
-import Logout from "./pages/Logout.jsx";
+import { Logout } from "./pages/Logout.jsx";
 import Header from "./components/home/Header.jsx";
 
 function App() {
@@ -30,6 +27,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
+
           <Route path="/userbook" element={<UserBooks />} />
           <Route path="/admin" element={<AdminDashBoard />} />
           <Route path="/user" element={<UserDashBoard />} />
@@ -41,7 +39,7 @@ function App() {
             <Route path="/Profile" element={<Profile />} />
             <Route path="/loaned" element={<UserloanedTable />} />
           </Route>
-          <Route element={<ProtectedRoute />}>
+          <Route element={<ProtectedRoute user={user} />}>
             <Route path="books" element={<Books />} />
             <Route path="users" element={<Users />} />
             <Route path="loans" element={<Loans />} />

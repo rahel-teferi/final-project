@@ -110,6 +110,26 @@ export const Users = () => {
       console.log(error);
     }
   };
+  const sortUser = async (sortingColumn, order) => {
+    if (order == "asc") {
+      order = "desc";
+    } else if (order == "desc") {
+      order = "ASC";
+    }
+    try {
+      const response = await fetch(
+        `${baseURL}/users?sort=${sortingColumn}&order=${order}`
+      );
+      console.log(response);
+      if (!response.ok) {
+        throw new Error("not found");
+      }
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       {isLoading && (
@@ -123,15 +143,19 @@ export const Users = () => {
         </section>
       )}
 
-      <h1>Users Management</h1>
-      <AddUserForm onSubmitUser={addUser} cleanForm={cleanForm} />
-      <p>
+      <h1 style={{ padding: "10px 50px" }}>Users Management</h1>
+      <p style={{ padding: "0 50px" }}>
+        <AddUserForm onSubmitUser={addUser} cleanForm={cleanForm} />
+      </p>
+
+      <p style={{ padding: "0 50px" }}>
         <UserSearch onSearch={searchUser} />
       </p>
       <UsersTable
         users={users}
         onRowDelete={deleteUser}
         onUpdateUser={editUser}
+        onSorting={sortUser}
       />
     </div>
   );

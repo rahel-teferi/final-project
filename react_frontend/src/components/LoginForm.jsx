@@ -166,7 +166,7 @@ export default function LoginForm() {
             }}
           >
             <div id="modal-modal-description" sx={{ mt: 2 }}>
-              <FormControl style={{ marginBottom: "30px", width: "350px" }}>
+              <FormControl style={{ marginBottom: "30px", width: "100%" }}>
                 <FormLabel htmlFor="email">Email</FormLabel>
                 <TextField
                   id="email"
@@ -185,7 +185,7 @@ export default function LoginForm() {
                   <p style={{ color: "red" }}>Wronge email format</p>
                 )}
               </FormControl>
-              <FormControl style={{ marginBottom: "30px", width: "350px" }}>
+              <FormControl style={{ marginBottom: "30px", width: "100%" }}>
                 <Box
                   sx={{
                     display: "flex",

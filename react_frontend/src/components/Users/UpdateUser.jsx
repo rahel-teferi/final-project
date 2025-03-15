@@ -3,6 +3,10 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { useState } from "react";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
 
 export const UpdateUser = ({ data, onUpdateUser }) => {
   const [open, setOpen] = useState(false);
@@ -39,11 +43,9 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
     bgcolor: "background.paper",
     border: "2px solid #000",
     boxShadow: 24,
-    p: 4,
   };
 
   return (
@@ -56,7 +58,25 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div id="modal-modal-description" sx={{ mt: 2 }}>
+          <DialogTitle
+            sx={{ width: "100%", m: "auto", textAlign: "center" }}
+            id="customized-dialog-title"
+          >
+            Update User
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={(theme) => ({
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: theme.palette.grey[500],
+            })}
+          >
+            <CloseIcon />
+          </IconButton>
+          <DialogContent dividers>
             <form onSubmit={handleEdit}>
               <p style={{ position: "relative", width: "250px" }}>
                 <label>
@@ -136,7 +156,7 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
                 </Button>
               </p>
             </form>
-          </div>
+          </DialogContent>
         </Box>
       </Modal>
     </>

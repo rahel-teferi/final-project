@@ -4,22 +4,24 @@ import { db } from "../server.js";
 export async function getUsers(req, res) {
   if (req.query.sort) {
     const fieldName = req.query.sort;
-    let sortingOrder = "ASC";
-    if (req.query.order) {
-      sortingOrder = req.query.order;
-      db.query(
-        `SELECT * FROM users ORDER BY ${fieldName} ${sortingOrder}`,
-        (error, result, fields) => {
-          res.status(200).json(result);
+    let order = "ASC";
+    // if (req.query.order) {
+    //   sortingOrder = req.query.order;
+    db.query(
+      `SELECT * FROM users ORDER BY ${fieldName} ${order}`,
+      (error, result) => {
+        if (error) {
+          res.status(400).json(error);
         }
-      );
-    }
+        res.status(200).json(result);
+      }
+    );
   } else if (req.query.id) {
     let searchValue = Number(req.query.id);
     db.query(
       "SELECT * FROM users WHERE user_id=?",
       [`${searchValue}`],
-      (error, result, fields) => {
+      (error, result) => {
         console.log("searched");
         res.status(200).json(result);
       }
@@ -29,7 +31,7 @@ export async function getUsers(req, res) {
     db.query(
       `SELECT * FROM users WHERE name like '%${searchValue}%' OR email like '%${searchValue}%';`,
       [],
-      (error, result, fields) => {
+      (error, result) => {
         if (error) {
           throw new Error(error);
         }
@@ -37,30 +39,27 @@ export async function getUsers(req, res) {
       }
     );
   } else {
-    db.query("SELECT * FROM users ORDER BY name", (error, result, fields) => {
+    db.query("SELECT * FROM users ORDER BY name", (error, result) => {
       res.status(200).json(result);
     });
   }
 }
 
 export async function getUsersToLoan(req, res) {
-  db.query(
-    "SELECT user_id, name FROM users ORDER BY name",
-    (error, result, fields) => {
-      if (error) {
-        res.status(404).json({ message: error.sqlMessage });
-      } else {
-        res.status(200).json(result);
-      }
+  db.query("SELECT user_id, name FROM users ORDER BY name", (error, result) => {
+    if (error) {
+      res.status(404).json({ message: error.sqlMessage });
+    } else {
+      res.status(200).json(result);
     }
-  );
+  });
 }
 
 export async function getUsersInfo(req, res) {
   let idToShow = Number(req.params.id);
   db.query(
     `SELECT * FROM users WHERE user_id=${idToShow} `,
-    (error, result, fields) => {
+    (error, result) => {
       if (error) {
         res.status(400).json(error);
       } else if (result) {
@@ -78,7 +77,7 @@ export async function deleteUser(req, res) {
     db.query(
       "DELETE  FROM users WHERE user_id = ?",
       [idToDelete],
-      (error, result, fields) => {
+      (error, result) => {
         if (error) {
           return db.rollback(() => {
             res.status(500).json({ error: "User Deletion failed" });

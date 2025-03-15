@@ -9,9 +9,13 @@ import { UserBooksTable } from "../components/books/UserBooksTable";
 export const UserBooks = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [books, setBooks] = useState([]);
-  const [cleanForm, setCleanForm] = useState(false);
+
   const [book, setBook] = useState([]);
   const baseURL = "http://localhost:3000";
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const fetchBooks = async () => {
     try {
@@ -44,26 +48,6 @@ export const UserBooks = () => {
     }
   };
 
-  // const sortByTitle = async (sortingColumn, order) => {
-  //   if (order === "ASC") {
-  //     order = "DESC";
-  //   } else if (order === "desc") {
-  //     order = "ASC";
-  //   }
-  //   try {
-  //     const response = await fetch(
-  //       `${baseURL}/books?sort=${sortingColumn} ${order}`
-  //     );
-  //     console.log(response);
-  //     if (!response.ok) {
-  //       throw new Error("not found");
-  //     }
-  //     const data = await response.json();
-  //     setBooks(data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
   const getBookInfo = async (id) => {
     try {
       const response = await fetch(`${baseURL}/books/${id}`);
@@ -73,12 +57,32 @@ export const UserBooks = () => {
       }
       const data = await response.json();
       setBook(data[0]);
+      setOpen(true);
       console.log(data);
     } catch (error) {
       console.log(error);
     }
   };
-
+  const sortBook = async (sortingColumn, order) => {
+    if (order == "asc") {
+      order = "desc";
+    } else if (order == "desc") {
+      order = "ASC";
+    }
+    try {
+      const response = await fetch(
+        `${baseURL}/books?sort=${sortingColumn}&order=${order}`
+      );
+      console.log(response);
+      if (!response.ok) {
+        throw new Error("not found");
+      }
+      const data = await response.json();
+      setBooks(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div style={{ padding: "20px" }}>
       {isLoading && (
@@ -91,22 +95,25 @@ export const UserBooks = () => {
           </div>
         </section>
       )}
-      <h1>List of books</h1>
+      <h1 sx={{ padding: "0 50px" }}>List of books</h1>
 
-      <p>
+      <p sx={{ padding: "0 50px" }}>
         <BookSearch onSearch={searchBook} />
       </p>
+
       {books.length !== 0 ? (
-        <UserBooksTable
-          books={books}
-          book={book}
-          onBookInfo={getBookInfo}
-          // onSorting={sortByTitle}
-        />
+        <div sx={{ padding: "0 50px" }}>
+          <UserBooksTable
+            books={books}
+            book={book}
+            onBookInfo={getBookInfo}
+            onSorting={sortBook}
+          />
+        </div>
       ) : (
         <p>There are no Books</p>
       )}
-      <BookInfo book={book} />
+      <BookInfo book={book} open={open} setOpen={setOpen} />
     </div>
   );
 };

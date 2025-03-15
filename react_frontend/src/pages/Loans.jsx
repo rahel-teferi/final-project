@@ -6,7 +6,7 @@ import { LoanSearch } from "../components/loans/LoanSearch.jsx";
 
 export const Loans = () => {
   const [loans, setLoans] = useState([]);
-
+  const [cleanForm, setCleanForm] = useState(false);
   const baseURL = "http://localhost:3000";
 
   const addLoan = async (data) => {
@@ -29,6 +29,7 @@ export const Loans = () => {
 
       alert(result.message);
       fetchLoans();
+      setCleanForm(true);
     } catch (error) {
       console.log(error);
     }
@@ -52,7 +53,7 @@ export const Loans = () => {
       console.log(result);
       alert(result.message);
       fetchLoans();
-      // setCleanForm(true);
+      setCleanForm(true);
     } catch (error) {
       console.log(error);
     }
@@ -90,9 +91,11 @@ export const Loans = () => {
   };
   return (
     <div>
-      <h1>Loan/ Return Managment</h1>
-      <LoanForm onSubmitLoan={addLoan} />
-      <p>
+      <h1 style={{ padding: "0 50px" }}>Loan/ Return Managment</h1>
+      <p style={{ padding: "0 50px" }}>
+        <LoanForm onSubmitLoan={addLoan} />
+      </p>
+      <p style={{ padding: "0 50px" }}>
         <LoanSearch onSearch={searchLoan} />
       </p>
       <LoanTabel loans={loans} onUpdateLoan={updateLoan} />

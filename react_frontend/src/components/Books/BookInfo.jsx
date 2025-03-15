@@ -1,77 +1,84 @@
 import React from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
 
-export const BookInfo = ({ book }) => {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+export const BookInfo = ({ book, open, setOpen }) => {
   const handleClose = () => setOpen(false);
   const style = {
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
+    bgcolor: "white",
+    border: "2px solid grey",
     boxShadow: 24,
-    p: 4,
   };
-  const navigate = useNavigate();
-
+  // const imgSrc = URL.createObjectURL(book.image);
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={style}>
-        <div>
-          <p>id: {book.book_id}</p>
-          <p>Title: {book.title}</p>
-          <p>Author: {book.author}</p>
-          <p>Genre: {book.genre}</p>
-          <p>Description: {book.description}</p>
-          <p>Email: {book.status}</p>
+    <div>
+      <Modal
+        style={{ backgroundColor: "rgb(255, 255, 255, 0.8" }}
+        open={open}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <DialogTitle
+            sx={{ width: "100%", m: "auto", p: 2, textAlign: "center" }}
+            id="customized-dialog-title"
+          >
+            {book.title}
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={(theme) => ({
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: theme.palette.grey[500],
+            })}
+          >
+            <CloseIcon />
+          </IconButton>
+          <DialogContent
+            dividers
+            style={{
+              margin: "auto",
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <img
+              style={{
+                width: "100%",
+                margin: "auto",
+                maxWidth: "800px",
+              }}
+            />
+            <img
+              src="/bookcover.png"
+              style={{
+                width: "100%",
+                margin: "auto",
+                maxWidth: "800px",
+              }}
+            />
 
-          <p>
-            Go back to the
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                // navigate(-1);
-                navigate(`/books`);
-              }}
-            >
-              Book list
-            </a>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                // navigate(-1);
-                navigate(`/books/${book.book_id - 1}`);
-              }}
-            >
-              Prev
-            </a>
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                // navigate(-1);
-                navigate(`/books/${book.book_id + 1}`);
-              }}
-            >
-              Next
-            </a>
-          </p>
-        </div>
-      </Box>
-    </Modal>
+            <p>id: {book.book_id}</p>
+            <p>Title: {book.title}</p>
+            <p>Author: {book.author}</p>
+            <p>Genre: {book.genre}</p>
+            <p>Description: {book.description}</p>
+            <p>Status: {book.status}</p>
+          </DialogContent>
+        </Box>
+      </Modal>
+    </div>
   );
 };

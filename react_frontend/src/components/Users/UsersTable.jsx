@@ -17,7 +17,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-
+import Paper from "@mui/material/Paper";
 import { useState, useEffect } from "react";
 import { UpdateUser } from "./UpdateUser";
 import { styled } from "@mui/material/styles";
@@ -25,7 +25,7 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
@@ -112,7 +112,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export const UsersTable = ({ users, onRowDelete, onUpdateUser }) => {
+export const UsersTable = ({ users, onRowDelete, onUpdateUser, onSorting }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -130,15 +130,42 @@ export const UsersTable = ({ users, onRowDelete, onUpdateUser }) => {
   };
 
   return (
-    <div>
-      <TableContainer>
-        <Table sx={{ maxWidth: 800 }} aria-label="custom pagination table">
+    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+      <TableContainer sx={{ maxHeight: 1100, padding: "10px 50px" }}>
+        <Table aria-label="custom pagination table">
           <TableHead>
             <StyledTableRow>
-              <StyledTableCell>User id</StyledTableCell>
-              <StyledTableCell align="left">Use name</StyledTableCell>
-              <StyledTableCell align="left">Email</StyledTableCell>
-              <StyledTableCell align="left">Role</StyledTableCell>
+              <StyledTableCell
+                onClick={() => {
+                  onSorting(Object.keys(users[0])[0]);
+                }}
+              >
+                User id
+              </StyledTableCell>
+              <StyledTableCell
+                onClick={() => {
+                  onSorting(Object.keys(users[0])[1]);
+                }}
+                align="left"
+              >
+                Use name
+              </StyledTableCell>
+              <StyledTableCell
+                onClick={() => {
+                  onSorting(Object.keys(users[0])[2]);
+                }}
+                align="left"
+              >
+                Email
+              </StyledTableCell>
+              <StyledTableCell
+                onClick={() => {
+                  onSorting(Object.keys(users[0])[3]);
+                }}
+                align="left"
+              >
+                Role
+              </StyledTableCell>
               <StyledTableCell align="left">Edit</StyledTableCell>
               <StyledTableCell align="left">Delete</StyledTableCell>
             </StyledTableRow>
@@ -203,6 +230,6 @@ export const UsersTable = ({ users, onRowDelete, onUpdateUser }) => {
           </TableFooter>
         </Table>
       </TableContainer>
-    </div>
+    </Paper>
   );
 };

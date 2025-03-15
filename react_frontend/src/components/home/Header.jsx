@@ -1,11 +1,9 @@
-import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { NavLink } from "react-router-dom";
 import AuthContext from "../core/AuthContext";
 import { useContext } from "react";
+import NavbarBrand from "react-bootstrap/esm/NavbarBrand";
 
 export const Header = () => {
   const { isLogged, user } = useContext(AuthContext);
@@ -13,43 +11,34 @@ export const Header = () => {
     <Navbar
       expand="lg"
       style={{
-        minWidth: "500px",
-        height: "75px",
         maxWidth: "1200px",
         margin: "auto",
       }}
     >
-      <Container fluid>
-        <Navbar.Brand
-          href="#"
-          style={{
-            fontSize: "30px",
-            fontWeight: "bold",
-          }}
-          // className="text-primary "
-        >
+      <Container
+        fluid
+        style={{
+          margin: "auto",
+          alignItems: "center",
+        }}
+      >
+        <NavbarBrand href="#" style={{ fontSize: "25px" }}>
           Library management system
-        </Navbar.Brand>
+        </NavbarBrand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll" style={{ justifyContent: "right" }}>
           {!isLogged && (
             <Nav
-              className="me-auto my-2 my-lg-0 "
+              className="me-auto my-2 my-lg-0"
               style={{
                 maxHeight: "100px",
                 display: "flex",
                 justifyContent: "center",
               }}
             >
-              <Nav.Link href="/" style={{ color: "black" }}>
-                Home
-              </Nav.Link>
-              <Nav.Link href="/userbook" style={{ color: "black" }}>
-                Books
-              </Nav.Link>
-              <Nav.Link href="Contact" style={{ color: "black" }}>
-                Contact
-              </Nav.Link>
+              <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="/userbook">Books</Nav.Link>
+              <Nav.Link href="#">Gallery</Nav.Link>
             </Nav>
           )}
           {!isLogged && (
@@ -63,18 +52,22 @@ export const Header = () => {
 
           {isLogged && (
             <>
-              <h5 style={{ margin: "5px 100px 0 0", alignItems: "center" }}>
+              <h5
+                style={{
+                  marginRight: "50px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
                 Hello {user.name}
               </h5>
               <Nav.Link
                 href="/"
                 style={{
-                  color: "black",
                   alignItems: "right",
-                  marginRight: "50px",
                 }}
               >
-                <h5> Logout</h5>
+                Logout
               </Nav.Link>
             </>
           )}

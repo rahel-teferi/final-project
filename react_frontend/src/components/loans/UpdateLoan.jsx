@@ -2,6 +2,10 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
 import { useState } from "react";
 
 export const UpdateLoan = ({ data, onUpdateLoan }) => {
@@ -41,11 +45,18 @@ export const UpdateLoan = ({ data, onUpdateLoan }) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
     bgcolor: "background.paper",
     border: "2px solid #000",
     boxShadow: 24,
-    p: 4,
+  };
+  const validateTime = async (e) => {
+    let selectedDate = new Date(e.target.value);
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    if (selectedDate < currentDate) {
+      alert("The Date can not be in the past");
+      e.target.value = "";
+    }
   };
 
   return (
@@ -58,7 +69,25 @@ export const UpdateLoan = ({ data, onUpdateLoan }) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div id="modal-modal-description" sx={{ mt: 2 }}>
+          <DialogTitle
+            sx={{ width: "100%", m: "auto", textAlign: "center" }}
+            id="customized-dialog-title"
+          >
+            Update Loan
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={(theme) => ({
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: theme.palette.grey[500],
+            })}
+          >
+            <CloseIcon />
+          </IconButton>
+          <DialogContent dividers>
             <form onSubmit={handleEdit}>
               <p style={{ position: "relative", width: "250px" }}>
                 <label>
@@ -128,7 +157,10 @@ export const UpdateLoan = ({ data, onUpdateLoan }) => {
                     type="date"
                     name="return_date"
                     value={formFields.return_date}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      validateTime(e);
+                    }}
                     style={{
                       width: "250px",
                       padding: "8px",
@@ -173,7 +205,7 @@ export const UpdateLoan = ({ data, onUpdateLoan }) => {
                 </Button>
               </div>
             </form>
-          </div>
+          </DialogContent>
         </Box>
       </Modal>
     </>

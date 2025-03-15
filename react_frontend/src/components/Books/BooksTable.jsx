@@ -4,7 +4,6 @@ import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -20,7 +19,7 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
@@ -123,10 +122,11 @@ export const BooksTable = ({
   onRowDelete,
   books,
   onBookInfo,
+  onSorting,
   book,
 }) => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -141,106 +141,157 @@ export const BooksTable = ({
     setPage(0);
   };
   const handleClick = (e, id) => {
-    console.log(id);
     onBookInfo(id);
   };
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table sx={{ maxWidth: 1200 }} aria-label="custom pagination table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Book id</StyledTableCell>
-              <StyledTableCell align="left">Title</StyledTableCell>
-              <StyledTableCell align="left">Author</StyledTableCell>
-              <StyledTableCell align="left">Genre</StyledTableCell>
-              <StyledTableCell align="left">description</StyledTableCell>
-              <StyledTableCell align="left">Staus</StyledTableCell>
-              <StyledTableCell align="left">Edit</StyledTableCell>
-              <StyledTableCell align="left">Delete</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {(rowsPerPage > 0
-              ? books.slice(
-                  page * rowsPerPage,
-                  page * rowsPerPage + rowsPerPage
-                )
-              : books
-            ).map((row) => (
-              <StyledTableRow
-                key={row.book_id}
-                sx={{ th: { border: 1000 } }}
-                onClick={(e) => {
-                  handleClick(e, row.book_id);
-                }}
-              >
-                <StyledTableCell component="td" scope="row">
-                  {row.book_id}
+      <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <TableContainer sx={{ maxHeight: 1100, padding: "10px 50px" }}>
+          <Table aria-label="custom pagination table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell
+                  onClick={() => {
+                    onSorting(Object.keys(books[0])[0]);
+                  }}
+                >
+                  Book id
                 </StyledTableCell>
-                <StyledTableCell align="left" scope="row">
-                  {row.title}
+                <StyledTableCell
+                  onClick={() => {
+                    onSorting(Object.keys(books[0])[1]);
+                  }}
+                  align="left"
+                >
+                  Title
                 </StyledTableCell>
-                <StyledTableCell align="left">{row.author}</StyledTableCell>
-                <StyledTableCell align="left">{row.genre}</StyledTableCell>
-                <StyledTableCell align="left">
-                  {row.description}
+                <StyledTableCell
+                  onClick={() => {
+                    onSorting(Object.keys(books[0])[2]);
+                  }}
+                  align="left"
+                >
+                  Author
                 </StyledTableCell>
-                <StyledTableCell align="left">{row.status}</StyledTableCell>
-                <StyledTableCell align="left">
-                  <UpdateBook data={row} onUpdateBook={onUpdateBook} />
+                <StyledTableCell
+                  onClick={() => {
+                    onSorting(Object.keys(books[0])[3]);
+                  }}
+                  align="left"
+                >
+                  Genre
                 </StyledTableCell>
-                <StyledTableCell align="right">
-                  <button
-                    data-id={row.book_id}
+                <StyledTableCell
+                  onClick={() => {
+                    onSorting(Object.keys(books[0])[4]);
+                  }}
+                  align="left"
+                >
+                  description
+                </StyledTableCell>
+                <StyledTableCell
+                  onClick={() => {
+                    onSorting(Object.keys(books[0])[5]);
+                  }}
+                  align="left"
+                >
+                  Staus
+                </StyledTableCell>
+                <StyledTableCell align="left">Edit</StyledTableCell>
+                <StyledTableCell align="left">Delete</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {(rowsPerPage > 0
+                ? books.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : books
+              ).map((row) => (
+                <StyledTableRow
+                  key={row.book_id}
+                  sx={{ th: { border: 1000 } }}
+                  onClick={(e) => {
+                    handleClick(e, row.book_id);
+                  }}
+                >
+                  <StyledTableCell component="td" scope="row">
+                    {row.book_id}
+                  </StyledTableCell>
+                  <StyledTableCell align="left" scope="row">
+                    {row.title}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">{row.author}</StyledTableCell>
+                  <StyledTableCell align="left">{row.genre}</StyledTableCell>
+                  <StyledTableCell align="left">
+                    {row.description}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">{row.status}</StyledTableCell>
+                  <StyledTableCell
+                    align="left"
                     onClick={(e) => {
-                      onRowDelete(row.book_id, e);
+                      e.stopPropagation();
                     }}
                   >
-                    Delete
-                  </button>{" "}
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
+                    <UpdateBook data={row} onUpdateBook={onUpdateBook} />
+                  </StyledTableCell>
+                  <StyledTableCell
+                    align="right"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    <button
+                      data-id={row.book_id}
+                      onClick={(e) => {
+                        onRowDelete(row.book_id, e);
+                      }}
+                    >
+                      Delete
+                    </button>{" "}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
 
-            {emptyRows > 0 && (
-              <StyledTableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={8} />
-              </StyledTableRow>
-            )}
-          </TableBody>
-          <TableFooter>
-            <TableRow
-              style={{
-                height: "100%",
-                alignContent: "center",
-                justifyContent: "center",
-              }}
-            >
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                colSpan={8}
-                count={books.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                slotProps={{
-                  select: {
-                    inputProps: {
-                      "aria-label": "rows per page",
-                    },
-                    native: true,
-                  },
+              {emptyRows > 0 && (
+                <StyledTableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={8} />
+                </StyledTableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow
+                style={{
+                  height: "100%",
+                  alignContent: "center",
+                  justifyContent: "center",
                 }}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
-            </TableRow>
-          </TableFooter>
-        </Table>
-      </TableContainer>
-      <BookInfo book={book} />
+              >
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 15, { label: "All", value: -1 }]}
+                  colSpan={8}
+                  count={books.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  slotProps={{
+                    select: {
+                      inputProps: {
+                        "aria-label": "rows per page",
+                      },
+                      native: true,
+                    },
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
+      </Paper>
     </>
   );
 };

@@ -3,11 +3,16 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { useState } from "react";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
 
 export const AddUserForm = ({ onSubmitUser }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [cleanForm, setCleanForm] = useState(false);
   const [formFields, setFormFields] = useState({
     name: "",
     email: "",
@@ -19,12 +24,11 @@ export const AddUserForm = ({ onSubmitUser }) => {
     position: "absolute",
     top: "50%",
     left: "50%",
+    width: 300,
     transform: "translate(-50%, -50%)",
-    width: 400,
     bgcolor: "background.paper",
-    border: "2px solid #000",
+    border: "2px solid #grey",
     boxShadow: 24,
-    p: 4,
   };
 
   const handleChange = (e) => {
@@ -41,6 +45,7 @@ export const AddUserForm = ({ onSubmitUser }) => {
       role: formFields.role,
     };
     handleClose();
+    setCleanForm(true);
     onSubmitUser(newUser);
   };
 
@@ -48,18 +53,33 @@ export const AddUserForm = ({ onSubmitUser }) => {
     <>
       <Button onClick={handleOpen}>Add a user</Button>
       <Modal
+        style={{ backgroundColor: "rgb(255, 255, 255, 0.9" }}
         open={open}
-        onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div id="modal-modal-title" variant="h6" component="h2">
-            New user
-          </div>
-          <div id="modal-modal-description" sx={{ mt: 2 }}>
+          <DialogTitle
+            sx={{ width: "100%", m: "auto", textAlign: "center" }}
+            id="customized-dialog-title"
+          >
+            New User
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={(theme) => ({
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: theme.palette.grey[500],
+            })}
+          >
+            <CloseIcon />
+          </IconButton>
+          <DialogContent dividers>
             <form onSubmit={handleSubmit}>
-              <p style={{ position: "relative", width: "250px" }}>
+              <p>
                 <label>
                   User name
                   <input
@@ -77,12 +97,12 @@ export const AddUserForm = ({ onSubmitUser }) => {
                   />
                 </label>
               </p>
-              <p style={{ position: "relative", width: "250px" }}>
-                <label>
+              <p>
+                <label style={{ width: "100%" }}>
                   Email
                   <input
                     style={{
-                      width: "250px",
+                      width: "100%",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
@@ -95,8 +115,8 @@ export const AddUserForm = ({ onSubmitUser }) => {
                   />
                 </label>
               </p>
-              <p style={{ position: "relative", width: "250px" }}>
-                <label>
+              <p>
+                <label style={{ width: "100%" }}>
                   Password
                   <input
                     style={{
@@ -113,12 +133,12 @@ export const AddUserForm = ({ onSubmitUser }) => {
                   />
                 </label>
               </p>
-              <p style={{ position: "relative", width: "250px" }}>
-                <label>
+              <p>
+                <label style={{ width: "100%" }}>
                   Role
                   <select
                     style={{
-                      width: "250px",
+                      width: "100%",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
@@ -133,13 +153,13 @@ export const AddUserForm = ({ onSubmitUser }) => {
                   </select>
                 </label>
               </p>
-              <p style={{ position: "relative", width: "250px" }}>
+              <p>
                 <Button variant="contained" type="submit">
                   Add user
                 </Button>
               </p>
             </form>
-          </div>
+          </DialogContent>
         </Box>
       </Modal>
     </>

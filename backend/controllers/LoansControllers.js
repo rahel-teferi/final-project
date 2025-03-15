@@ -8,7 +8,7 @@ export async function getLoans(req, res) {
       sortingOrder = req.query.order;
       db.query(
         `SELECT * FROM loans ORDER BY ${fieldName} ${sortingOrder}`,
-        (error, result, fields) => {
+        (error, result) => {
           res.status(200).json(result);
         }
       );
@@ -21,7 +21,7 @@ export async function getLoans(req, res) {
       JOIN users USING(user_id) 
       JOIN books USING(book_id) WHERE books.title like '%${searchValue}%' OR users.name like '%${searchValue}%';`,
       [],
-      (error, result, fields) => {
+      (error, result) => {
         if (error) {
           throw new Error(error);
         }
@@ -34,7 +34,7 @@ export async function getLoans(req, res) {
       FROM library_managment_system.loans 
       JOIN users USING(user_id) 
       JOIN books USING(book_id)`,
-      (error, result, fields) => {
+      (error, result) => {
         res.status(200).json(result);
       }
     );
@@ -55,7 +55,6 @@ export async function getBooksLoaned(req, res) {
         res.status(404).json({ message: error.message });
       } else {
         res.status(200).json(result);
-        console.log(result);
       }
     }
   );
@@ -65,18 +64,16 @@ export const getLoanInfo = async (req, res) => {
   let idToShow = Number(req.params.id);
   db.query(
     `SELECT * FROM loans where loan_id=${idToShow} `,
-    (error, result, fields) => {
+    (error, result) => {
       res.status(200).json(result[0]);
-      // console.log(result[0]); //this will return the first element of the array
+
       res.status(200).json(result);
-      console.log(result);
     }
   );
 };
 
 export async function deleteLoan(req, res) {
   let idToDelete = Number(req.params.id);
-  console.log(idToDelete);
 
   // validation
   if (typeof idToDelete !== "number") {
@@ -86,29 +83,12 @@ export async function deleteLoan(req, res) {
     db.query(
       "DELETE  FROM loans where loan_id = ?",
       [idToDelete],
-      (error, result, fields) => {
+      (error, result) => {
         res.status(200).json({ message: "Loanreturn deleted" });
       }
     );
   }
 }
-
-// export async function addLoan(req, res) {
-//   const reqBody = req.body;
-//   console.log(reqBody);
-// db.query(
-//   "SELECT title, status FROM books WHERE book_id = ?",
-//   [reqBody.book_id],
-//   (err, SELECTedBook) => {
-//     console.log(SELECTedBook[0].status);
-//     if (SELECTedBook[0].status === "Loaned") {
-//       let errMessage = `The book '${SELECTedBook.title}' is already loaned!`;
-//       console.error(errMessage);
-//       res.status(200).json({ error: errMessage });
-//       return;
-//     }
-//   }
-// );
 
 export async function addLoan(req, res) {
   const { book_id, user_id, loan_date, return_date, status } = req.body;
@@ -193,4 +173,22 @@ export async function updateLoan(req, res) {
       }
     );
   });
+}
+
+export async function extendLoan(req, res) {
+  const loan_id = req.params.id;
+  console.log(loan_id);
+  db.query(
+    `UPDATE loans SET return_date = DATE_ADD(return_date, INTERVAL 7 DAY), extenssion_count=extenssion_count+1 WHERE loan_id = ? `,
+    [loan_id],
+    (err, result) => {
+      if (err) {
+        console.log(err.message);
+        res.status(400).json({ error: "Loan update failed" });
+      } else if (result) {
+        console.log(result);
+        res.status(200).json({ message: "Loan extended" });
+      }
+    }
+  );
 }

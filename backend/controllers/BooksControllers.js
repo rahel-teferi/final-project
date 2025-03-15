@@ -8,7 +8,7 @@ export async function getBooks(req, res) {
     //   sortingOrder = req.query.order;
     db.query(
       `select * from books ORDER BY ${fieldName} ${order}`,
-      (error, result, fields) => {
+      (error, result) => {
         if (error) {
           res.status(400).json(error);
         }
@@ -21,7 +21,7 @@ export async function getBooks(req, res) {
     db.query(
       `SELECT * FROM books WHERE title like '%${searchValue}%' OR author like '%${searchValue}%';`,
       [],
-      (error, result, fields) => {
+      (error, result) => {
         if (error) {
           throw new Error(error);
         }
@@ -29,7 +29,7 @@ export async function getBooks(req, res) {
       }
     );
   } else {
-    db.query("select * from books ORDER BY title", (error, result, fields) => {
+    db.query("select * from books", (error, result) => {
       res.status(200).json(result);
     });
   }
@@ -39,9 +39,10 @@ export const getBooksInfo = async (req, res) => {
   let idToShow = Number(req.params.id);
   db.query(
     `select * from books where book_id=${idToShow} `,
-    (error, result, fields) => {
-      //res.status(200).json(result[0]);
-      // console.log(result[0]); //this will return the first element of the array
+    (error, result) => {
+      if (error) {
+        throw new Error(error);
+      }
       res.status(200).json(result);
       console.log(result);
     }
@@ -54,7 +55,7 @@ export async function deleteBook(req, res) {
     db.query(
       "DELETE  FROM books WHERE book_id = ?",
       [idToDelete],
-      (error, result, fields) => {
+      (error, result) => {
         if (error) {
           return db.rollback(() => {
             res.status(500).json({ error: "Book Deletion failed" });

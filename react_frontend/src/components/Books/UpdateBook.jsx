@@ -3,8 +3,12 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { useState } from "react";
+import DialogContent from "@mui/material/DialogContent";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import DialogTitle from "@mui/material/DialogTitle";
 
-export const UpdateBook = ({ data, onUpdateBook }) => {
+export const UpdateBook = ({ e, data, onUpdateBook }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -41,27 +45,44 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
     bgcolor: "background.paper",
     border: "2px solid #000",
     boxShadow: 24,
-    p: 4,
+    maxWidth: 600,
   };
 
   return (
     <>
       <Button onClick={handleOpen}>Update</Button>
       <Modal
+        style={{ backgroundColor: "rgb(255, 255, 255, 0.8" }}
         open={open}
-        onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div id="modal-modal-description" sx={{ mt: 2 }}>
+          <DialogTitle
+            sx={{ m: "auto", textAlign: "center" }}
+            id="customized-dialog-title"
+          >
+            Update Book
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={(theme) => ({
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: theme.palette.grey[500],
+            })}
+          >
+            <CloseIcon />
+          </IconButton>
+          <DialogContent dividers>
             <form onSubmit={handleEdit}>
-              <p style={{ position: "relative", width: "250px" }}>
-                <label>
+              <p>
+                <label style={{ width: "100%" }}>
                   Book title
                   <input
                     style={{
@@ -77,7 +98,7 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
                   />
                 </label>
               </p>
-              <p style={{ position: "relative", width: "250px" }}>
+              <p>
                 <label>
                   Book author
                   <input
@@ -94,7 +115,7 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
                   />
                 </label>
               </p>
-              <p style={{ position: "relative", width: "250px" }}>
+              <p>
                 <label>
                   Book genre
                   <input
@@ -111,7 +132,7 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
                   />
                 </label>
               </p>
-              <p style={{ position: "relative", width: "250px" }}>
+              <p>
                 <label>
                   Description
                   <input
@@ -128,7 +149,7 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
                   />
                 </label>
               </p>
-              <p style={{ position: "relative", width: "250px" }}>
+              <p>
                 <label>
                   Status
                   <select
@@ -136,7 +157,7 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
                     name="status"
                     onChange={handleChange}
                     style={{
-                      width: "250px",
+                      width: "100%",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
@@ -154,7 +175,7 @@ export const UpdateBook = ({ data, onUpdateBook }) => {
                 </Button>
               </p>
             </form>
-          </div>
+          </DialogContent>
         </Box>
       </Modal>
     </>

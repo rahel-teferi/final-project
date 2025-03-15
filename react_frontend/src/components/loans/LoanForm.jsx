@@ -3,30 +3,27 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { useState, useEffect } from "react";
-import { Select } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
 
-export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
+export const LoanForm = ({ onSubmitLoan }) => {
   const style = {
     position: "absolute",
     top: "50%",
     left: "50%",
+    width: 300,
     transform: "translate(-50%, -50%)",
-    width: 400,
     bgcolor: "background.paper",
     border: "2px solid #000",
     boxShadow: 24,
-    p: 4,
   };
 
   const [books, setBooks] = useState([]); // Data from database
 
   const [users, setUsers] = useState([]); // Data from database
-
+  const [cleanForm, setCleanForm] = useState(false);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -38,6 +35,17 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
     return_date: "",
     is_returned: "",
   });
+  useEffect(() => {
+    if (cleanForm) {
+      setFormFields({
+        title: "",
+        author: "",
+        genre: "",
+        description: "",
+        status: "available",
+      });
+    }
+  }, [cleanForm]);
   const baseURL = "http://localhost:3000";
   const handleChange = (e, i) => {
     e.preventDefault();
@@ -89,27 +97,54 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
       is_returned: formFields.is_returned,
     };
     handleClose();
+    setCleanForm(true);
     onSubmitLoan(newTransaction);
+  };
+
+  const validateTime = async (e) => {
+    let selectedDate = new Date(e.target.value);
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    if (selectedDate < currentDate) {
+      alert("The Date can not be in the past");
+      e.target.value = "";
+    }
   };
 
   return (
     <div>
       <Button onClick={handleOpen}>Issue loan</Button>
+
       <Modal
+        style={{ backgroundColor: "rgb(255, 255, 255, 0.8" }}
         open={open}
-        onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <div id="modal-modal-title" variant="h6" component="h2">
-            Add Loan
-          </div>
+          <DialogTitle
+            sx={{ width: "100%", m: "auto", p: 2, textAlign: "center" }}
+            id="customized-dialog-title"
+          >
+            Issue Loan
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={(theme) => ({
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: theme.palette.grey[500],
+            })}
+          >
+            <CloseIcon />
+          </IconButton>
 
-          <div id="modal-modal-description" sx={{ mt: 2 }}>
+          <DialogContent dividers>
             <form onSubmit={handleSubmit}>
-              <p style={{ position: "relative", width: "250px" }}>
-                <label>
+              <p>
+                <label style={{ width: "100%" }}>
                   User name
                   <select
                     name="user_id"
@@ -118,7 +153,7 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
                     required
                     placeholder="Search..."
                     style={{
-                      width: "250px",
+                      width: "100%",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
@@ -133,8 +168,8 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
                   </select>
                 </label>
               </p>
-              <p style={{ position: "relative", width: "250px" }}>
-                <label>
+              <p>
+                <label style={{ width: "100%" }}>
                   Book title
                   <select
                     name="book_id"
@@ -142,7 +177,7 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
                     value={formFields.book_id}
                     placeholder="Search..."
                     style={{
-                      width: "250px",
+                      width: "100%",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
@@ -158,16 +193,19 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
                   </select>
                 </label>
               </p>
-              <p style={{ position: "relative", width: "250px" }}>
-                <label>
+              <p>
+                <label style={{ width: "100%" }}>
                   Loan date
                   <input
                     type="date"
                     name="loan_date"
                     value={formFields.loan_date}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      validateTime(e);
+                    }}
                     style={{
-                      width: "250px",
+                      width: "100%",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
@@ -175,16 +213,19 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
                   />
                 </label>
               </p>
-              <p style={{ position: "relative", width: "250px" }}>
-                <label>
+              <p>
+                <label style={{ width: "100%" }}>
                   Return date
                   <input
                     type="date"
                     name="return_date"
                     value={formFields.return_date}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      validateTime(e);
+                    }}
                     style={{
-                      width: "250px",
+                      width: "100%",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
@@ -193,15 +234,15 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
                   />
                 </label>
               </p>
-              <p style={{ position: "relative", width: "250px" }}>
-                <label>
+              <p>
+                <label style={{ width: "100%" }}>
                   Returned
                   <select
                     value={formFields.is_returned}
                     name="is_returned"
                     onChange={handleChange}
                     style={{
-                      width: "250px",
+                      width: "100%",
                       padding: "8px",
                       borderRadius: "4px",
                       border: "1px solid #ccc",
@@ -213,13 +254,13 @@ export const LoanForm = ({ onSubmitLoan, onUpdateBookStatus }) => {
                   </select>
                 </label>
               </p>
-              <div style={{ position: "relative", width: "250px" }}>
+              <div style={{ position: "relative", width: "100%" }}>
                 <Button variant="contained" type="submit">
                   Loan
                 </Button>
               </div>
             </form>
-          </div>
+          </DialogContent>
         </Box>
       </Modal>
     </div>
