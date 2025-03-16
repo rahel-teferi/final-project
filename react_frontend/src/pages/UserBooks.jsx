@@ -95,17 +95,16 @@ export const UserBooks = () => {
           </div>
         </section>
       )}
-      <h1 sx={{ padding: "0 50px" }}>List of books</h1>
+      <h1 style={{ padding: "0 50px" }}>List of books</h1>
 
-      <p sx={{ padding: "0 50px" }}>
+      <div style={{ padding: "20px 50px" }}>
         <BookSearch onSearch={searchBook} />
-      </p>
+      </div>
 
       {books.length !== 0 ? (
-        <div sx={{ padding: "0 50px" }}>
+        <div style={{ padding: "0 50px" }}>
           <UserBooksTable
             books={books}
-            book={book}
             onBookInfo={getBookInfo}
             onSorting={sortBook}
           />

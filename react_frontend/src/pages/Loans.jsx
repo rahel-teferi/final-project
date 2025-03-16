@@ -92,12 +92,12 @@ export const Loans = () => {
   return (
     <div>
       <h1 style={{ padding: "0 50px" }}>Loan/ Return Managment</h1>
-      <p style={{ padding: "0 50px" }}>
+      <div style={{ padding: "0 50px" }}>
         <LoanForm onSubmitLoan={addLoan} />
-      </p>
-      <p style={{ padding: "0 50px" }}>
+      </div>
+      <div style={{ padding: "0 50px" }}>
         <LoanSearch onSearch={searchLoan} />
-      </p>
+      </div>
       <LoanTabel loans={loans} onUpdateLoan={updateLoan} />
     </div>
   );

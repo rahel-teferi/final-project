@@ -230,7 +230,7 @@ export const UserloanedTable = () => {
                       {row.is_returned}
                     </StyledTableCell>
                     <StyledTableCell>
-                      {row.extenssion_count < 3 && (
+                      {row.extenssion_count < 3 && row.is_returned == "No" && (
                         <button
                           onClick={() => {
                             onExtend(row.loan_id, row);
