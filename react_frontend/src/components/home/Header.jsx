@@ -38,7 +38,7 @@ export const Header = () => {
             >
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/userbook">Books</Nav.Link>
-              <Nav.Link href="#">Gallery</Nav.Link>
+              <Nav.Link href="/contact">Contact</Nav.Link>
             </Nav>
           )}
           {!isLogged && (

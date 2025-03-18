@@ -89,13 +89,14 @@ export const Books = () => {
         method: "DELETE",
       });
       if (!response.ok) {
-        throw new Error(
+        alert(
           "This Book can not be deleted because it has entries in other tables"
         );
+      } else {
+        const result = await response.json();
+        alert(result.message);
+        fetchBooks();
       }
-      const result = await response.json();
-      alert(result.message);
-      fetchBooks();
     } catch (error) {
       console.log(error);
     }

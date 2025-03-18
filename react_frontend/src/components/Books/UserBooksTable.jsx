@@ -123,7 +123,7 @@ TablePaginationActions.propTypes = {
 
 export const UserBooksTable = ({ books, onBookInfo, onSorting }) => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(25);
+  const [rowsPerPage, setRowsPerPage] = useState(15);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - books.length) : 0;
@@ -233,7 +233,7 @@ export const UserBooksTable = ({ books, onBookInfo, onSorting }) => {
             <TableRow>
               <TablePagination
                 style={{ alignSelf: "left" }}
-                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                rowsPerPageOptions={[5, 10, 15, { label: "All", value: -1 }]}
                 colSpan={6}
                 count={books.length}
                 rowsPerPage={rowsPerPage}
