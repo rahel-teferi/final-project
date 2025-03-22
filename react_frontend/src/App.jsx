@@ -17,6 +17,7 @@ import ProtectedRoute from "./components/core/ProtectedRoute.jsx";
 import { Logout } from "./pages/Logout.jsx";
 import Header from "./components/home/Header.jsx";
 import { Contact } from "./components/home/Contact.jsx";
+import { Report } from "./components/charts/Report.jsx";
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -28,6 +29,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/report" element={<Report />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/userbook" element={<UserBooks />} />
           <Route path="/admin" element={<AdminDashBoard />} />
