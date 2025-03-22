@@ -36,6 +36,7 @@ function App() {
           <Route path="/user" element={<UserDashBoard />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/Profile" element={<Profile />} />
+          <Route path="/bookcatagories" element={<BookCatagories />} />
           <Route path="logout" element={<Logout />} />
 
           <Route element={<ProtectedRoute user={user} />}>

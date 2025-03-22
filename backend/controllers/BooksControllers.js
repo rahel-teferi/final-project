@@ -35,19 +35,19 @@ export async function getBooks(req, res) {
   }
 }
 
-// export const getBooksInfo = async (req, res) => {
-//   let idToShow = Number(req.params.id);
-//   db.query(
-//     `select * from books where book_id=${idToShow} `,
-//     (error, result) => {
-//       if (error) {
-//         throw new Error(error);
-//       }
-//       res.status(200).json(result);
-//       console.log(result);
-//     }
-//   );
-// };
+export const getBooksInfo = async (req, res) => {
+  let idToShow = Number(req.params.id);
+  db.query(
+    `select * from books where book_id=${idToShow} `,
+    (error, result) => {
+      if (error) {
+        throw new Error(error);
+      }
+      res.status(200).json(result);
+      console.log(result);
+    }
+  );
+};
 
 export async function deleteBook(req, res) {
   let idToDelete = Number(req.params.id);
