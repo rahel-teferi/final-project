@@ -23,7 +23,11 @@ app.get("/books/loans", BooksControllers.getBooksToLoan);
 app.put("/books/:id", BooksControllers.updateBook);
 app.delete("/books/:id", BooksControllers.deleteBook);
 app.post("/books", BooksControllers.addBooks);
+<<<<<<< HEAD
 app.get("/books/catagories", BooksControllers.catagorizeBooks);
+=======
+app.get("/books/report", BooksControllers.reportBooks);
+>>>>>>> e7caaf4ebb9e42652da6a843b4ea532fbee24403
 
 app.get("/users", UsersControllers.getUsers);
 app.get("/loans/users", UsersControllers.getUsersToLoan);

@@ -144,7 +144,11 @@ export async function updateBook(req, res) {
   );
 }
 
+<<<<<<< HEAD
 export const catagorizeBooks = async (req, res) => {
+=======
+export const reportBooks = async (req, res) => {
+>>>>>>> e7caaf4ebb9e42652da6a843b4ea532fbee24403
   db.query(
     `SELECT genre, COUNT(*) AS book_count
 FROM books
