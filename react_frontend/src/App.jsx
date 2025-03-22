@@ -17,6 +17,7 @@ import ProtectedRoute from "./components/core/ProtectedRoute.jsx";
 import { Logout } from "./pages/Logout.jsx";
 import Header from "./components/home/Header.jsx";
 import { Contact } from "./components/home/Contact.jsx";
+import { BookCatagories } from "./components/charts/BookCatagories.jsx";
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -28,6 +29,7 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/bookcatagories" element={<BookCatagories />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/userbook" element={<UserBooks />} />
           <Route path="/admin" element={<AdminDashBoard />} />
