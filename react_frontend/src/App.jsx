@@ -21,6 +21,7 @@ import { BookCatagories } from "./components/charts/BookCatagories.jsx";
 
 function App() {
   const { user } = useContext(AuthContext);
+  const login = window.localStorage.getItem("isLoggedIn");
   return (
     <div>
       <header>
@@ -28,16 +29,15 @@ function App() {
       </header>
       <main>
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/bookcatagories" element={<BookCatagories />} />
+          <Route path="/" element={login ? <HomePage /> : <LoginForm />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/userbook" element={<UserBooks />} />
           <Route path="/admin" element={<AdminDashBoard />} />
           <Route path="/user" element={<UserDashBoard />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/Profile" element={<Profile />} />
-          <Route path="/bookcatagories" element={<BookCatagories />} />
           <Route path="logout" element={<Logout />} />
+          <Route path="/catagories" element={<BookCatagories />} />
 
           <Route element={<ProtectedRoute user={user} />}>
             <Route path="/Profile" element={<Profile />} />

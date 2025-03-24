@@ -165,7 +165,7 @@ export async function updateLoan(req, res) {
               }
 
               res.status(200).json({
-                message: "Return successfull",
+                message: "Update successfull",
               });
             });
           }

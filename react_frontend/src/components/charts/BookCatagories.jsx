@@ -15,13 +15,13 @@ const Color = [
 export const BookCatagories = () => {
   const [data, setData] = useState([]);
   const baseURL = "http://localhost:3000";
-  const fetchBookCatagoriess = async () => {
+  const fetchBookCatagories = async () => {
     try {
-      const response = await fetch(`${baseURL}/books/catagories`);
+      const response = await fetch(`${baseURL}/catagories`);
       if (!response.ok) {
-        throw new error("not found");
         console.log(response);
       }
+      console.log(response);
       const result = await response.json();
       console.log(result);
       setData(result);
@@ -31,7 +31,7 @@ export const BookCatagories = () => {
   };
 
   useEffect(() => {
-    fetchBookCatagoriess(data);
+    fetchBookCatagories();
   }, []);
 
   return (

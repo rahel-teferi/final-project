@@ -109,7 +109,7 @@ export default function LoginForm() {
 
       // alert(result.found);
       if (result.found === true) {
-        // we get all the fields from the students table
+        window.localStorage.setItem("isLoggedIn", true);
         login({
           userId: result.data.user_id,
           name: result.data.name,

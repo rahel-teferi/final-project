@@ -41,7 +41,7 @@ const Menu = [
     icon: <ShoppingCartIcon />,
   },
   {
-    segment: "bookcatagories",
+    segment: "catagories",
     title: "Book Catagories",
     icon: <ShoppingCartIcon />,
   },
@@ -100,14 +100,14 @@ function useDemoRouter(initialPath) {
 }
 
 export default function AdminDashBoard() {
-  const router = useDemoRouter("/bookcatagories");
+  const router = useDemoRouter("/catagories");
 
   return (
     <AppProvider
       branding={{
         logo: "",
         title: "Administrator dashboard",
-        homeUrl: "/bookcatagories",
+        homeUrl: "/catagories",
       }}
       navigation={Menu}
       router={router}
@@ -119,7 +119,7 @@ export default function AdminDashBoard() {
         {router.pathname === "/users" && <Users />}
         {router.pathname === "/loans" && <Loans />}
         {router.pathname === "/Profile" && <Profile />}
-        {router.pathname === "/bookcatagories" && <BookCatagories />}
+        {router.pathname === "/catagories" && <BookCatagories />}
         {/* </PageContainer> */}
       </DashboardLayout>
     </AppProvider>

@@ -2,23 +2,33 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 
-export const AddUserForm = ({ onSubmitUser }) => {
+export const AddUserForm = ({ onSubmitUser, cleanForm }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [cleanForm, setCleanForm] = useState(false);
+
   const [formFields, setFormFields] = useState({
     name: "",
     email: "",
     password: "",
-    role: "",
+    role: "Member",
   });
+  useEffect(() => {
+    if (cleanForm) {
+      setFormFields({
+        name: "",
+        email: "",
+        password: "",
+        role: "Member",
+      });
+    }
+  }, [cleanForm]);
 
   const style = {
     position: "absolute",
@@ -44,9 +54,10 @@ export const AddUserForm = ({ onSubmitUser }) => {
       password: formFields.password,
       role: formFields.role,
     };
+
     handleClose();
-    setCleanForm(true);
     onSubmitUser(newUser);
+    cleanForm(true);
   };
 
   return (
@@ -93,6 +104,7 @@ export const AddUserForm = ({ onSubmitUser }) => {
                     value={formFields.name}
                     name="name"
                     onChange={handleChange}
+                    autoComplete="false"
                     required
                   />
                 </label>
@@ -129,6 +141,7 @@ export const AddUserForm = ({ onSubmitUser }) => {
                     value={formFields.password}
                     name="password"
                     onChange={handleChange}
+                    autoComplete="false"
                     required
                   />
                 </label>
