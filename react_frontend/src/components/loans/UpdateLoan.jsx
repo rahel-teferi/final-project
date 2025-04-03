@@ -61,7 +61,7 @@ export const UpdateLoan = ({ data, onUpdateLoan }) => {
 
   return (
     <>
-      <Button onClick={handleOpen}>Return</Button>
+      <Button onClick={handleOpen}>Update</Button>
       <Modal
         open={open}
         onClose={handleClose}

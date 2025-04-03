@@ -27,7 +27,7 @@ const HomePage = () => {
           style={{
             // position: "absolute",
             textAlign: "center",
-            marginTop: "-100px",
+            marginTop: "-150px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -40,7 +40,7 @@ const HomePage = () => {
             paddingTop: "20px",
           }}
         >
-          <h2 style={{ margin: "50px 0" }}>New arrials at our Library</h2>
+          <h2 style={{ margin: "50px 0" }}>New arrivals at our Library</h2>
 
           <div
             style={{
@@ -69,7 +69,7 @@ const HomePage = () => {
                   width: "100%",
                   height: "100%",
                 }}
-                src="/Books.jpg"
+                src="/bookcover.png"
               />
             </div>
             <div
@@ -103,7 +103,7 @@ const HomePage = () => {
                   width: "100%",
                   height: "100%",
                 }}
-                src="/Books.jpg"
+                src="/bookcover.png"
               />
             </div>
             <div

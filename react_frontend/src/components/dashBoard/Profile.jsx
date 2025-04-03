@@ -3,7 +3,7 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router";
 
 import AuthContext from "../core/AuthContext";
-const url = "http://localhost:3000/users";
+const url = "http://localhost:3000";
 export const Profile = () => {
   const [member, setMember] = useState(null);
   const { user } = useContext(AuthContext);
@@ -13,7 +13,7 @@ export const Profile = () => {
   useEffect(() => {
     const readUserInfo = async () => {
       try {
-        const response = await fetch(`${url}/${user.userId}`);
+        const response = await fetch(`${url}/users/${user.userId}`);
 
         if (!response.ok) {
           throw Error("There was a problem connecting to the database!");

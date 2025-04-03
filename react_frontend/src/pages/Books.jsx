@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Button, Modal } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import { BooksTable } from "../components/books/BooksTable";
 import { AddBookForm } from "../components/books/AddBookForm";
 import { BookSearch } from "../components/books/BookSearch";
@@ -16,7 +18,14 @@ export const Books = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const [message, setMessage] = useState("");
+  const [modalIsOpen, setIsOpen] = useState(false);
+  function openModal() {
+    setIsOpen(true);
+  }
+  function closeModal() {
+    setIsOpen(false);
+  }
   const fetchBooks = async () => {
     try {
       const response = await fetch(`${baseURL}/books`);
@@ -50,7 +59,8 @@ export const Books = () => {
         }
       }
       const result = await response.json();
-      alert(result.message);
+      setMessage(result.message);
+      openModal();
       await fetchBooks();
       setCleanForm(true);
     } catch (error) {
@@ -76,7 +86,8 @@ export const Books = () => {
         }
       }
       const result = await response.json();
-      alert(result.message);
+      setMessage(result.message);
+      openModal();
       fetchBooks();
       setCleanForm(true);
     } catch (error) {
@@ -89,13 +100,15 @@ export const Books = () => {
         method: "DELETE",
       });
       if (!response.ok) {
-        throw new Error(
+        alert(
           "This Book can not be deleted because it has entries in other tables"
         );
+      } else {
+        const result = await response.json();
+        setMessage(result.message);
+        openModal();
+        fetchBooks();
       }
-      const result = await response.json();
-      alert(result.message);
-      fetchBooks();
     } catch (error) {
       console.log(error);
     }
@@ -181,6 +194,45 @@ export const Books = () => {
         <p>There are no Books</p>
       )}
       <BookInfo book={book} open={open} setOpen={setOpen} />
+      {modalIsOpen && (
+        <Modal
+          open={modalIsOpen}
+          onClose={closeModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 300,
+              height: 200,
+              backgroundColor: "white",
+              border: "2px solid #000",
+              boxShadow: 24,
+              p: 6,
+            }}
+          >
+            <Button
+              onClick={closeModal}
+              style={{
+                position: "absolute",
+                top: "5px",
+                right: "5px",
+                alignContent: "right",
+              }}
+            >
+              close
+            </Button>
+            <br />
+            <Typography id="modal-modal-description" sx={{ p: 6 }}>
+              {message}
+            </Typography>
+          </Box>
+        </Modal>
+      )}
     </div>
   );
 };

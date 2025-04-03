@@ -12,6 +12,7 @@ export const UpdateUser = ({ data, onUpdateUser }) => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
   const [values, setValues] = useState({
     user_id: data.user_id,
     name: data.name,

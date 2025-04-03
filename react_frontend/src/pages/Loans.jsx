@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-
+import { Button, Modal } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import { LoanTabel } from "../components/Loans/LoanTabel.jsx";
 import { LoanForm } from "../components/loans/LoanForm.jsx";
 import { LoanSearch } from "../components/loans/LoanSearch.jsx";
@@ -9,6 +11,14 @@ export const Loans = () => {
   const [cleanForm, setCleanForm] = useState(false);
   const baseURL = "http://localhost:3000";
 
+  const [message, setMessage] = useState("");
+  const [modalIsOpen, setIsOpen] = useState(false);
+  function openModal() {
+    setIsOpen(true);
+  }
+  function closeModal() {
+    setIsOpen(false);
+  }
   const addLoan = async (data) => {
     console.log(data);
     try {
@@ -26,8 +36,8 @@ export const Loans = () => {
         }
       }
       const result = await response.json();
-
-      alert(result.message);
+      setMessage(result.message);
+      openModal();
       fetchLoans();
       setCleanForm(true);
     } catch (error) {
@@ -50,8 +60,8 @@ export const Loans = () => {
         }
       }
       const result = await response.json();
-      console.log(result);
-      alert(result.message);
+      setMessage(result.message);
+      openModal();
       fetchLoans();
       setCleanForm(true);
     } catch (error) {
@@ -66,7 +76,6 @@ export const Loans = () => {
       if (!response.ok) {
         throw error("not found");
       }
-
       const result = await response.json();
       setLoans(result);
     } catch (error) {
@@ -99,6 +108,45 @@ export const Loans = () => {
         <LoanSearch onSearch={searchLoan} />
       </div>
       <LoanTabel loans={loans} onUpdateLoan={updateLoan} />
+      {modalIsOpen && (
+        <Modal
+          open={modalIsOpen}
+          onClose={closeModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 300,
+              height: 200,
+              backgroundColor: "white",
+              border: "2px solid #000",
+              boxShadow: 24,
+              p: 6,
+            }}
+          >
+            <Button
+              onClick={closeModal}
+              style={{
+                position: "absolute",
+                top: "5px",
+                right: "5px",
+                alignContent: "right",
+              }}
+            >
+              close
+            </Button>
+            <br />
+            <Typography id="modal-modal-description" sx={{ p: 6 }}>
+              {message}
+            </Typography>
+          </Box>
+        </Modal>
+      )}
     </div>
   );
 };

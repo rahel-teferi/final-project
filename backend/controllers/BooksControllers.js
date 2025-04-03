@@ -36,12 +36,12 @@ export async function getBooks(req, res) {
 }
 
 export const getBooksInfo = async (req, res) => {
-  let idToShow = Number(req.params.id);
+  let idToShow = req.params.id;
   db.query(
     `select * from books where book_id=${idToShow} `,
     (error, result) => {
       if (error) {
-        throw new Error(error);
+        res.status(404).json(error);
       }
       res.status(200).json(result);
       console.log(result);
@@ -53,7 +53,7 @@ export async function deleteBook(req, res) {
   let idToDelete = Number(req.params.id);
   db.beginTransaction((err) => {
     db.query(
-      "DELETE  FROM books WHERE book_id = ?",
+      "DELETE FROM books WHERE book_id = ?",
       [idToDelete],
       (error, result) => {
         if (error) {
@@ -143,3 +143,16 @@ export async function updateBook(req, res) {
     }
   );
 }
+
+export const catagorizeBooks = async (req, res) => {
+  db.query(
+    `SELECT genre, COUNT(*) AS book_count FROM books GROUP BY genre ORDER BY book_count DESC;`,
+    (error, result) => {
+      if (error) {
+        res.status(404).json({ message: error.sqlMessage });
+      } else {
+        res.status(200).json(result);
+      }
+    }
+  );
+};

@@ -16,13 +16,14 @@ export const db = mysql.createConnection({
   password: "DataSQL",
   database: "library_managment_system",
 });
-
+const port = process.env.PORT || 3000;
 app.get("/books", BooksControllers.getBooks);
 app.get("/books/loans", BooksControllers.getBooksToLoan);
 app.get("/books/:id", BooksControllers.getBooksInfo);
 app.put("/books/:id", BooksControllers.updateBook);
 app.delete("/books/:id", BooksControllers.deleteBook);
 app.post("/books", BooksControllers.addBooks);
+app.get("/catagories", BooksControllers.catagorizeBooks);
 
 app.get("/users", UsersControllers.getUsers);
 app.get("/loans/users", UsersControllers.getUsersToLoan);
@@ -46,6 +47,6 @@ app.use((req, res, next) => {
   res.status(404).send("wrong route");
 });
 
-app.listen(3000, () => {
-  console.log("Listening on http://localhost:3000");
+app.listen(port, () => {
+  console.log(`Listening on ${port}`);
 });

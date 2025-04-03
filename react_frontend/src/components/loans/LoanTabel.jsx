@@ -138,7 +138,7 @@ export const LoanTabel = ({ loans, onUpdateLoan }) => {
               <StyledTableCell align="left">Loaned date</StyledTableCell>
               <StyledTableCell align="left">Return date</StyledTableCell>
               <StyledTableCell align="left">Returned</StyledTableCell>
-              <StyledTableCell align="left"></StyledTableCell>
+              <StyledTableCell align="left">Update</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>

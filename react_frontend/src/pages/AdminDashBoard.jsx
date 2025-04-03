@@ -13,6 +13,7 @@ import { Users } from "./Users";
 import { Profile } from "../components/dashBoard/Profile";
 import { Loans } from "./Loans";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import { BookCatagories } from "../components/charts/BookCatagories.jsx";
 
 const Menu = [
   {
@@ -40,6 +41,11 @@ const Menu = [
     icon: <ShoppingCartIcon />,
   },
   {
+    segment: "catagories",
+    title: "Book Catagories",
+    icon: <ShoppingCartIcon />,
+  },
+  {
     kind: "divider",
   },
   {
@@ -48,7 +54,7 @@ const Menu = [
   },
   {
     segment: "reports",
-    title: "Reports",
+    title: "reports",
     icon: <BarChartIcon />,
     children: [
       {
@@ -94,14 +100,14 @@ function useDemoRouter(initialPath) {
 }
 
 export default function AdminDashBoard() {
-  const router = useDemoRouter("/Profile");
+  const router = useDemoRouter("/catagories");
 
   return (
     <AppProvider
       branding={{
         logo: "",
         title: "Administrator dashboard",
-        homeUrl: "/Profile",
+        homeUrl: "/catagories",
       }}
       navigation={Menu}
       router={router}
@@ -113,6 +119,7 @@ export default function AdminDashBoard() {
         {router.pathname === "/users" && <Users />}
         {router.pathname === "/loans" && <Loans />}
         {router.pathname === "/Profile" && <Profile />}
+        {router.pathname === "/catagories" && <BookCatagories />}
         {/* </PageContainer> */}
       </DashboardLayout>
     </AppProvider>

@@ -7,7 +7,7 @@ import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { useState, useMemo, useContext } from "react";
 import { Profile } from "../components/dashBoard/Profile";
 
-import { UserloanedTable } from "../components/books/UserLoanedTable";
+import { UserLoanedTable } from "../components/books/UserLoanedTable";
 import AuthContext from "../components/core/AuthContext.jsx";
 import { UserBooks } from "./UserBooks.jsx";
 
@@ -82,7 +82,7 @@ export default function UserDashBoard() {
       <DashboardLayout style>
         {router.pathname === "/userBooks" && <UserBooks />}
         {router.pathname === "/Profile" && <Profile />}
-        {router.pathname === "/loaned" && <UserloanedTable />}
+        {router.pathname === "/loaned" && <UserLoanedTable />}
       </DashboardLayout>
     </AppProvider>
   );
