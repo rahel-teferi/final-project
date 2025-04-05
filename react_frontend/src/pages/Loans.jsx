@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Modal } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { LoanTabel } from "../components/Loans/LoanTabel.jsx";
+import { LoanTabel } from "../components/loans/LoanTabel.jsx";
 import { LoanForm } from "../components/loans/LoanForm.jsx";
 import { LoanSearch } from "../components/loans/LoanSearch.jsx";
 
