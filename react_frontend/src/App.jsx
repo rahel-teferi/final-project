@@ -29,7 +29,7 @@ function App() {
       </header>
       <main>
         <Routes>
-          <Route path="/" element={login ? <HomePage /> : <LoginForm />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/userbook" element={<UserBooks />} />
           <Route path="/admin" element={<AdminDashBoard />} />
