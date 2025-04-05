@@ -1,5 +1,5 @@
 import React from "react";
-import { PieChart, Pie, Tooltip, Cell, Legend } from "recharts";
+// import { PieChart, Pie, Tooltip, Cell, Legend } from "recharts";
 import { useState, useEffect } from "react";
 
 const Color = [
@@ -51,7 +51,7 @@ export const BookCatagories = () => {
       <h3 style={{ textAlign: "center" }}>
         Catagories of books in the Library
       </h3>
-      <PieChart width={600} height={400}>
+      {/* <PieChart width={600} height={400}>
         <Pie data={data} dataKey="book_count" nameKey="genre" label>
           {data.map((_, index) => (
             <Cell key={`cell-${index}`} fill={Color[index]} />
@@ -59,7 +59,7 @@ export const BookCatagories = () => {
         </Pie>
         <Tooltip />
         <Legend />
-      </PieChart>
+      </PieChart> */}
     </div>
   );
 };
