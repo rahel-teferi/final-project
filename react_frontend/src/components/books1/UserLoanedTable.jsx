@@ -20,7 +20,6 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import { useState, useEffect } from "react";
 import AuthContext from "../core/AuthContext";
 import { useContext } from "react";
-import { blue } from "@mui/material/colors";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -197,9 +196,7 @@ export const UserLoanedTable = () => {
                   <StyledTableCell align="left">Loan date</StyledTableCell>
                   <StyledTableCell align="left">Return date</StyledTableCell>
                   <StyledTableCell align="left">Returned</StyledTableCell>
-                  <StyledTableCell align="left">
-                    Extend return date
-                  </StyledTableCell>
+                  <StyledTableCell align="left">Extend loan</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

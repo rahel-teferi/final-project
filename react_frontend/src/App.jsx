@@ -10,7 +10,7 @@ import { Profile } from "./components/dashBoard/Profile.jsx";
 import { UserBooks } from "./pages/UserBooks.jsx";
 import AuthContext from "./components/core/AuthContext";
 import { useContext } from "react";
-import { UserLoanedTable } from "./components/books/UserLoanedTable.jsx";
+import { UserLoanedTable } from "components/books/UserLoanedTable.jsx";
 import LoginForm from "./components/LoginForm.jsx";
 import HomePage from "./components/home/HomePage.jsx";
 import ProtectedRoute from "./components/core/ProtectedRoute.jsx";
