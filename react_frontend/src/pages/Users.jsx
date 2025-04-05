@@ -1,6 +1,6 @@
 import React from "react";
 import { AddUserForm } from "../components/users/AddUserForm";
-import { UsersTable } from "../components/Users/UsersTable";
+import { UsersTable } from "../components/users/UsersTable";
 import { useState, useEffect } from "react";
 import { UserSearch } from "../components/users/UserSearch";
 import { Button, Modal } from "@mui/material";
