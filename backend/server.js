@@ -1,7 +1,7 @@
 import express from "express";
 import mysql from "mysql2";
 import cors from "cors";
-
+import { Client } from "pg";
 import * as BooksControllers from "./controllers/BooksControllers.js";
 import * as UsersControllers from "./controllers/UsersControllers.js";
 import * as LoansControllers from "./controllers/LoansControllers.js";
@@ -10,12 +10,25 @@ const app = express();
 app.use(express.static("public"));
 app.use(express.json());
 app.use(cors({ origin: "*" }));
-export const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "DataSQL",
-  database: "library_managment_system",
+// export const db = mysql.createConnection({
+//   host: "localhost",
+//   user: "root",
+//   password: "DataSQL",
+//   database: "library_managment_system",
+// });
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false, // Needed for Render's PostgreSQL connection
+  },
 });
+
+// Connect to PostgreSQL
+client
+  .connect()
+  .then(() => console.log("Connected to PostgreSQL database"))
+  .catch((err) => console.error("Error connecting to the database", err));
+
 const port = process.env.PORT || 3000;
 app.get("/books", BooksControllers.getBooks);
 app.get("/books/loans", BooksControllers.getBooksToLoan);
