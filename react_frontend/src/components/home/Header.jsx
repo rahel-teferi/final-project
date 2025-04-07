@@ -4,9 +4,13 @@ import Navbar from "react-bootstrap/Navbar";
 import AuthContext from "../core/AuthContext";
 import { useContext } from "react";
 import NavbarBrand from "react-bootstrap/esm/NavbarBrand";
-
+import { Link } from "react-router-dom";
 export const Header = () => {
-  const { isLogged, user } = useContext(AuthContext);
+  const { isLogged, user, logout } = useContext(AuthContext);
+  const handleLogout = () => {
+    logout(); // Clear user authentication state
+    navigate("/login"); // Redirect to login page after logout (or home page if needed)
+  };
   return (
     <Navbar
       expand="lg"
@@ -36,18 +40,29 @@ export const Header = () => {
                 justifyContent: "center",
               }}
             >
-              <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="/userbook">Books</Nav.Link>
-              <Nav.Link href="/contact">Contact</Nav.Link>
+              <Nav.Item>
+                <Link to="/" className="nav-link">
+                  Home
+                </Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Link to="/userbook" className="nav-link">
+                  Books
+                </Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Link to="/contact" className="nav-link">
+                  Contact
+                </Link>
+              </Nav.Item>
             </Nav>
           )}
           {!isLogged && (
-            <Nav.Link
-              href="login"
-              style={{ color: "black", alignItems: "right" }}
-            >
-              Login
-            </Nav.Link>
+            <Nav.Item>
+              <Link to="/login" className="nav-link" style={{ color: "black" }}>
+                Login
+              </Link>
+            </Nav.Item>
           )}
 
           {isLogged && (
@@ -61,12 +76,7 @@ export const Header = () => {
               >
                 Hello {user.name}
               </h5>
-              <Nav.Link
-                href="/"
-                style={{
-                  alignItems: "right",
-                }}
-              >
+              <Nav.Link href="/" style={{ alignItems: "right" }}>
                 Logout
               </Nav.Link>
             </>
