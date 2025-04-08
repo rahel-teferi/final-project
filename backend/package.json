@@ -4,9 +4,9 @@
   "description": "project for Library managment system",
   "main": "server.js",
   "type": "module",
-  "scripts": { 
-    "start":"node server.js",
-    "devStart":"nodemon server.js",
+  "scripts": {
+    "start": "node server.js",
+    "devStart": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -21,6 +21,7 @@
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "fast-csv": "^5.0.2",
-    "mysql2": "^3.12.0"
+    "mysql2": "^3.12.0",
+    "pg": "^8.14.1"
   }
 }

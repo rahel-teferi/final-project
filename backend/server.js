@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import pg from "pg";
 import * as BooksControllers from "./controllers/BooksControllers.js";
 import * as UsersControllers from "./controllers/UsersControllers.js";
 import * as LoansControllers from "./controllers/LoansControllers.js";
@@ -14,7 +15,6 @@ app.use(cors({ origin: "*" }));
 //   password: "DataSQL",
 //   database: "library_managment_system",
 // });
-import pg from "pg";
 const client = new pg.Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
