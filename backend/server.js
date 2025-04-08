@@ -9,13 +9,8 @@ const app = express();
 app.use(express.static("public"));
 app.use(express.json());
 app.use(cors({ origin: "*" }));
-// export const db = mysql.createConnection({
-//   host: "localhost",
-//   user: "root",
-//   password: "DataSQL",
-//   database: "library_managment_system",
-// });
-export const client = new pg.Client({
+
+export const db = new pg.Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false, // Needed for Render's PostgreSQL connection
@@ -23,8 +18,7 @@ export const client = new pg.Client({
 });
 
 // Connect to PostgreSQL
-client
-  .connect()
+db.connect()
   .then(() => console.log("Connected to PostgreSQL database"))
   .catch((err) => console.error("Error connecting to the database", err));
 
