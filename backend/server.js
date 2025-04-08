@@ -29,7 +29,7 @@ app.get("/books/:id", BooksControllers.getBooksInfo);
 app.put("/books/:id", BooksControllers.updateBook);
 app.delete("/books/:id", BooksControllers.deleteBook);
 app.post("/books", BooksControllers.addBooks);
-app.get("/catagories", BooksControllers.catagorizeBooks);
+app.get("/catagories", BooksControllers.categorizeBooks);
 
 app.get("/users", UsersControllers.getUsers);
 app.get("/loans/users", UsersControllers.getUsersToLoan);
