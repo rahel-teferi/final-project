@@ -15,7 +15,7 @@ app.use(cors({ origin: "*" }));
 //   password: "DataSQL",
 //   database: "library_managment_system",
 // });
-const client = new pg.Client({
+export const client = new pg.Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false, // Needed for Render's PostgreSQL connection
