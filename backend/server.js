@@ -1,7 +1,5 @@
 import express from "express";
-import mysql from "mysql2";
 import cors from "cors";
-// import { Client } from "";
 import * as BooksControllers from "./controllers/BooksControllers.js";
 import * as UsersControllers from "./controllers/UsersControllers.js";
 import * as LoansControllers from "./controllers/LoansControllers.js";
@@ -16,9 +14,8 @@ app.use(cors({ origin: "*" }));
 //   password: "DataSQL",
 //   database: "library_managment_system",
 // });
-import * as pg from "pg";
-const { Client } = pg;
-const client = new Client({
+import pg from "pg";
+const client = new pg.Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false, // Needed for Render's PostgreSQL connection
