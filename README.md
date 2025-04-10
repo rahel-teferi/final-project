@@ -7,11 +7,20 @@ The Library Management System (LMS) is a comprehensive solution designed to stre
 
 You can check the project [here](https://library-management-system-fe-diop.onrender.com/)
 
-```
-Please use the following credintials to log in
-- As an admin- email:rahel@gmail.com & password:123456
-- As a user- email:eden@gmail.com & password:eden
-```
+
+
+### 🔐 Demo Logins
+
+#### 🧑‍💼 Admin
+- Email: rahel@gmail.com
+- Password: 123456
+
+#### 🧑‍🔧 Regular User
+- Email: eden@gmail.com
+- Password: eden
+
+> 🛠 Features vary by role. Try both to explore the full app.
+
 
 ## Usage
 
